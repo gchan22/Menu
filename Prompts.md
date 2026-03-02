@@ -9,3 +9,8 @@
 4. [x] Start on the restaurant screen and have the resturant screen with a button that says Start Eating which when pressed goes to the menu screen
 
 5. [x] Have a app bar on menu screen that allows you to go back to restaurant screen
+
+6. [x] Create a Items screen as a file in screens that includes a column of rows
+that has a + button on bottom right
+
+7. [x] For each row in menu screen have a + on left side of each which is a button that calls Items to create a new items screen for each type of food

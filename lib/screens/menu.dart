@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import 'items.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
@@ -21,13 +22,13 @@ class MenuScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildMenuRow(Icons.restaurant, 'Chicken'),
+                _buildMenuRow(context, Icons.restaurant, 'Chicken'),
                 const SizedBox(height: 10),
-                _buildMenuRow(Icons.restaurant, 'Beef'),
+                _buildMenuRow(context, Icons.restaurant, 'Beef'),
                 const SizedBox(height: 10),
-                _buildMenuRow(Icons.restaurant, 'Pork'),
+                _buildMenuRow(context, Icons.restaurant, 'Pork'),
                 const SizedBox(height: 10),
-                _buildMenuRow(Icons.local_drink, 'Soda'),
+                _buildMenuRow(context, Icons.local_drink, 'Soda'),
               ],
             ),
           ),
@@ -36,9 +37,20 @@ class MenuScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuRow(IconData icon, String label) {
+  Widget _buildMenuRow(BuildContext context, IconData icon, String label) {
     return Row(
       children: [
+        IconButton(
+          icon: const Icon(Icons.add_circle, color: Colors.white),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ItemsScreen(category: label),
+              ),
+            );
+          },
+        ),
         Icon(icon, size: 30, color: Colors.white),
         const SizedBox(width: 10),
         Expanded(
