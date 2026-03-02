@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import 'menu.dart';
 
 class RestaurantScreen extends StatelessWidget {
   const RestaurantScreen({super.key});
@@ -29,6 +30,16 @@ class RestaurantScreen extends StatelessWidget {
                     filled: true,
                     fillColor: Colors.white70,
                   ),
+                ),
+                const SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MenuScreen()),
+                    );
+                  },
+                  child: const Text('Start Eating'),
                 ),
               ],
             ),

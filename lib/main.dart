@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/restaurant.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,10 +8,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return MaterialApp(
+      title: 'Restaurant App',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const RestaurantScreen(),
+    );
   }
 }
-
