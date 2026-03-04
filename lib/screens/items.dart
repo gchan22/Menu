@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import 'description.dart';
 
 class ItemsScreen extends StatelessWidget {
   final String category;
@@ -22,11 +23,11 @@ class ItemsScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
             child: Column(
               children: [
-                _buildItemRow('Sample Item 1', '\$10.00'),
+                _buildItemRow(context, 'Sample Item 1', '\$10.00'),
                 const SizedBox(height: 10),
-                _buildItemRow('Sample Item 2', '\$12.00'),
+                _buildItemRow(context, 'Sample Item 2', '\$12.00'),
                 const SizedBox(height: 10),
-                _buildItemRow('Sample Item 3', '\$15.00'),
+                _buildItemRow(context, 'Sample Item 3', '\$15.00'),
               ],
             ),
           ),
@@ -41,18 +42,37 @@ class ItemsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildItemRow(String name, String price) {
+  Widget _buildItemRow(BuildContext context, String name, String price) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white70,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Expanded(
+            child: Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ),
           Text(price, style: const TextStyle(fontSize: 18, color: Colors.green)),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.blueAccent),
+            onPressed: () {
+              // Do nothing for now
+            },
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DescriptionScreen(itemName: name),
+                ),
+              );
+            },
+            child: const Text('More Information'),
+          ),
         ],
       ),
     );

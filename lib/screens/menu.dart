@@ -40,17 +40,6 @@ class MenuScreen extends StatelessWidget {
   Widget _buildMenuRow(BuildContext context, IconData icon, String label) {
     return Row(
       children: [
-        IconButton(
-          icon: const Icon(Icons.add_circle, color: Colors.white),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ItemsScreen(category: label),
-              ),
-            );
-          },
-        ),
         Icon(icon, size: 30, color: Colors.white),
         const SizedBox(width: 10),
         Expanded(
@@ -65,6 +54,17 @@ class MenuScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 18),
             ),
           ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add_circle, color: Colors.white),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ItemsScreen(category: label),
+              ),
+            );
+          },
         ),
       ],
     );

@@ -14,3 +14,9 @@
 that has a + button on bottom right
 
 7. [x] For each row in menu screen have a + on left side of each which is a button that calls Items to create a new items screen for each type of food
+
+8. [x] Have the + button on menu screen be inside the row on the right side
+
+9. [x] Create a description file in screens have a + on the right side of every row in items that goes to a new descriptions screen and in the descriptions screen have a column with a text box that is the title be the name of the item and another text box below with the a typeable text box asks for Description of the Item
+
+10. [x] Make the + on each row on items screen be instead a button that say More Information and have a new button between the price and the button be + but for now do nothing and in description screen make the first text box into a normal text box instead of a typeable title
