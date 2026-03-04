@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
 import 'description.dart';
+import 'cart.dart';
+import '../cart_state.dart';
 
 class ItemsScreen extends StatelessWidget {
   final String category;
@@ -31,6 +33,21 @@ class ItemsScreen extends StatelessWidget {
               ],
             ),
           ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: FloatingActionButton(
+              heroTag: 'cartFAB',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CartScreen()),
+                );
+              },
+              backgroundColor: Colors.blueAccent,
+              child: const Icon(Icons.shopping_cart, color: Colors.white),
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -59,7 +76,10 @@ class ItemsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add, color: Colors.blueAccent),
             onPressed: () {
-              // Do nothing for now
+              CartState.addItem(name);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$name added to cart!'), duration: const Duration(seconds: 1)),
+              );
             },
           ),
           ElevatedButton(
