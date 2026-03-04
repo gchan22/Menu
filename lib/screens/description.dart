@@ -12,12 +12,20 @@ class DescriptionScreen extends StatefulWidget {
 }
 
 class _DescriptionScreenState extends State<DescriptionScreen> {
-  final TextEditingController _descriptionController = TextEditingController();
+  final List<TextEditingController> _descriptionControllers = [];
 
   @override
   void dispose() {
-    _descriptionController.dispose();
+    for (var controller in _descriptionControllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  void _addTextBox() {
+    setState(() {
+      _descriptionControllers.add(TextEditingController());
+    });
   }
 
   @override
@@ -33,9 +41,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
         children: [
           const Backdrop(),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 80),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   widget.itemName,
@@ -45,37 +52,81 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 30),
-                TextField(
-                  controller: _descriptionController,
-                  maxLines: 5,
-                  decoration: const InputDecoration(
-                    labelText: 'Description of the Item',
-                    hintText: 'Enter the description here...',
-                    filled: true,
-                    fillColor: Colors.white70,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FinalizedDescriptionScreen(
-                          itemName: widget.itemName,
-                          description: _descriptionController.text,
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: _descriptionControllers.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ),
-                    );
-                  },
-                  child: const Text('Add Description'),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _descriptionControllers[index],
+                                maxLines: null,
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter description...',
+                                  border: InputBorder.none,
+                                ),
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.remove_circle, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  _descriptionControllers[index].dispose();
+                                  _descriptionControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
           ),
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FinalizedDescriptionScreen(
+                        itemName: widget.itemName,
+                        descriptionRows: _descriptionControllers
+                            .map((c) => c.text)
+                            .where((t) => t.isNotEmpty)
+                            .toList(),
+                        showSample: false,
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Exit'),
+              ),
+            ),
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _addTextBox,
+        label: const Text('Add Description'),
+        icon: const Icon(Icons.add),
       ),
     );
   }

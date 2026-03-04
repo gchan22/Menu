@@ -3,12 +3,14 @@ import '../widgets/backdrop.dart';
 
 class FinalizedDescriptionScreen extends StatelessWidget {
   final String itemName;
-  final String description;
+  final List<String> descriptionRows;
+  final bool showSample;
 
   const FinalizedDescriptionScreen({
     super.key,
     required this.itemName,
-    required this.description,
+    required this.descriptionRows,
+    this.showSample = true,
   });
 
   @override
@@ -24,9 +26,8 @@ class FinalizedDescriptionScreen extends StatelessWidget {
         children: [
           const Backdrop(),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   width: double.infinity,
@@ -45,17 +46,40 @@ class FinalizedDescriptionScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white70,
-                    borderRadius: BorderRadius.circular(8),
+                if (showSample) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white70,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'Sample description',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
-                  child: Text(
-                    description,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 18),
+                  const SizedBox(height: 10),
+                ],
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: descriptionRows.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          descriptionRows[index],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

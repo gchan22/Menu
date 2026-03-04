@@ -48,3 +48,21 @@ that has a + button on bottom right
 23. [x] Have a button - on the right side of each row in menu this button lets you remove the row that the button was on
 
 24. [x] In items screen have a button - on the right side of each row this button lets you remove the row that the button was on
+
+25. [x] Create a finalized_menu screen that is the same as the menu screen except it does not have the + button that adds new items and does not have - button to remove items
+
+26. [x] Create a finalized_item screen that is the same as the item menu except it does not have the + button that adds new items and does not have - button to remove items
+
+27. [x] Get rid of the description box in description screen replace with a textbox that says Sample description have a + on the button right that adds a row that is a text of what you type on the left of the row have a - button that removes that row
+
+28. [x] Make the textbox instead be a row in finalized_description screen and center the row as well as any row created
+
+29. [x] Have the row with sample description also have the - button that removes it and have all rows have the - button be on the right
+
+30. [x] make the space between the textbox sample description and newly added row in description screen be the same as every newly added row
+
+31. [x] get rid of textbox sample description and change the button + on the description to be a button that says Add Description and change the previous Add Description to be Exit and move button to buttom left
+
+32. [x] Change the adding of rows to be adding a textbox that allows multiple lines of text in description screen
+
+33. [x] Make the exit button be in the button middle of screen
