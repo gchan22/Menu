@@ -23,6 +23,10 @@ class FinalizedRestaurantScreen extends StatelessWidget {
             top: 40,
             left: 16,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 242, 109, 153),
+                foregroundColor: Colors.black,
+              ),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,

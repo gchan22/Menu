@@ -34,3 +34,17 @@ that has a + button on bottom right
 16. [x] Create a new file in screens called finalized_description have a button under description text box in description screen that says Add Description that goes to finalized_description screen have the finalized_description screen have a column with the same title as a textbox and have another textbox another that that has the description that was entered
 
 17. [x] Center the text in finalized_description screen
+
+18. [x] Make the new menu button in finalized_resturant pink background and black text
+
+19. [x] Make menu screen in screen directory have a + button on the bottom right that lets you add an item row as well as choose an icon on the left side of the row make the row also have a + button on the right on the row that goes to items screen 
+
+20. [x] Have the button in menu screen that adds new items also let you choose an icon between food and beverage
+
+21. [x] Change the + button that goes to items screen and instead make it a button that says Food Items
+
+22. [x] Put the Food Items button inside the row
+
+23. [x] Have a button - on the right side of each row in menu this button lets you remove the row that the button was on
+
+24. [x] In items screen have a button - on the right side of each row this button lets you remove the row that the button was on

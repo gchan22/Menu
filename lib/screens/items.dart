@@ -14,6 +14,12 @@ class ItemsScreen extends StatefulWidget {
 }
 
 class _ItemsScreenState extends State<ItemsScreen> {
+  final List<Map<String, String>> _items = [
+    {'name': 'Sample Item 1', 'price': '\$10.00'},
+    {'name': 'Sample Item 2', 'price': '\$12.00'},
+    {'name': 'Sample Item 3', 'price': '\$15.00'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,14 +34,12 @@ class _ItemsScreenState extends State<ItemsScreen> {
           const Backdrop(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
-            child: Column(
-              children: [
-                _buildItemRow(context, 'Sample Item 1', '\$10.00'),
-                const SizedBox(height: 10),
-                _buildItemRow(context, 'Sample Item 2', '\$12.00'),
-                const SizedBox(height: 10),
-                _buildItemRow(context, 'Sample Item 3', '\$15.00'),
-              ],
+            child: ListView.separated(
+              itemCount: _items.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                return _buildItemRow(context, index);
+              },
             ),
           ),
           Positioned(
@@ -89,14 +93,65 @@ class _ItemsScreenState extends State<ItemsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add item logic here
+          _showAddItemDialog();
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  Widget _buildItemRow(BuildContext context, String name, String price) {
+  void _showAddItemDialog() {
+    final nameController = TextEditingController();
+    final priceController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add Item'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Item Name'),
+              ),
+              TextField(
+                controller: priceController,
+                decoration: const InputDecoration(labelText: 'Price (e.g., \$10.00)'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
+                  setState(() {
+                    _items.add({
+                      'name': nameController.text,
+                      'price': priceController.text,
+                    });
+                  });
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildItemRow(BuildContext context, int index) {
+    final item = _items[index];
+    final name = item['name']!;
+    final price = item['price']!;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -131,6 +186,14 @@ class _ItemsScreenState extends State<ItemsScreen> {
               );
             },
             child: const Text('More Information'),
+          ),
+          IconButton(
+            icon: const Icon(Icons.remove_circle, color: Colors.red),
+            onPressed: () {
+              setState(() {
+                _items.removeAt(index);
+              });
+            },
           ),
         ],
       ),
