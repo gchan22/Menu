@@ -1,38 +1,28 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
-import 'menu.dart';
-import 'restaurant.dart';
 
-class FinalizedRestaurantScreen extends StatelessWidget {
-  final String restaurantName;
-  final String slogan;
+class FinalizedDescriptionScreen extends StatelessWidget {
+  final String itemName;
+  final String description;
 
-  const FinalizedRestaurantScreen({
+  const FinalizedDescriptionScreen({
     super.key,
-    required this.restaurantName,
-    required this.slogan,
+    required this.itemName,
+    required this.description,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Finalized Description'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           const Backdrop(),
-          Positioned(
-            top: 40,
-            left: 16,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RestaurantScreen()),
-                  (route) => false,
-                );
-              },
-              child: const Text('New Menu'),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -40,13 +30,13 @@ class FinalizedRestaurantScreen extends StatelessWidget {
               children: [
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.white70,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    restaurantName,
+                    itemName,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 24,
@@ -57,29 +47,16 @@ class FinalizedRestaurantScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.white70,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    slogan,
+                    description,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontStyle: FontStyle.italic,
-                    ),
+                    style: const TextStyle(fontSize: 18),
                   ),
-                ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MenuScreen()),
-                    );
-                  },
-                  child: const Text('Start Dining'),
                 ),
               ],
             ),

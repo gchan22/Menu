@@ -25,3 +25,12 @@ that has a + button on bottom right
 
 12. [x] Make a new file in screens called Cart have a clickable icon on bottom left that goes to cart screen the + on the rows in items screen adds items to the cart screen making it appear as a row in cart and have a column of the rows start the column with a textbox that says Cart
 
+13. [x] On cart icon in item screen have a small circle on top right that shows the amount of items in the cart and make the circle red
+
+14. [x] In cart screen for each row with item have a button that shows - have this button remove the item from cart
+
+15. [x] In finalized_resauratn screen have a button on top left that says New Menu and have it go to restaurant screen
+
+16. [x] Create a new file in screens called finalized_description have a button under description text box in description screen that says Add Description that goes to finalized_description screen have the finalized_description screen have a column with the same title as a textbox and have another textbox another that that has the description that was entered
+
+17. [x] Center the text in finalized_description screen

@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
 import '../cart_state.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +60,23 @@ class CartScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Icon(Icons.shopping_cart, size: 24, color: Colors.blueAccent),
-          const SizedBox(width: 10),
-          Text(itemName, style: const TextStyle(fontSize: 18)),
+          Row(
+            children: [
+              const Icon(Icons.shopping_cart, size: 24, color: Colors.blueAccent),
+              const SizedBox(width: 10),
+              Text(itemName, style: const TextStyle(fontSize: 18)),
+            ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.remove_circle, color: Colors.red),
+            onPressed: () {
+              setState(() {
+                CartState.removeItem(itemName);
+              });
+            },
+          ),
         ],
       ),
     );
