@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
-import 'items.dart';
+import 'finalized_items.dart';
+import 'finalized_restaurant.dart';
+import '../cart_state.dart';
 
 class FinalizedMenuScreen extends StatelessWidget {
   final List<Map<String, dynamic>> menuItems;
@@ -11,9 +13,24 @@ class FinalizedMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Finalized Menu'),
+        title: const Text('Menu', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            // Explicitly navigate to FinalizedRestaurantScreen on back
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FinalizedRestaurantScreen(
+                  restaurantName: CartState.restaurantName,
+                  slogan: CartState.slogan,
+                ),
+              ),
+            );
+          },
+        ),
       ),
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -26,46 +43,57 @@ class FinalizedMenuScreen extends StatelessWidget {
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final item = menuItems[index];
-                return Row(
-                  children: [
-                    Icon(item['icon'], size: 30, color: Colors.white),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              item['label'],
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ItemsScreen(category: item['label']),
-                                  ),
-                                );
-                              },
-                              child: const Text('Food Items'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                );
+                return _buildMenuItemRow(context, item);
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMenuItemRow(BuildContext context, Map<String, dynamic> item) {
+    return Row(
+      children: [
+        Icon(item['icon'], size: 30, color: Colors.white),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white70,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  item['label'],
+                  style: const TextStyle(fontSize: 18),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FinalizedItemsScreen(
+                          category: item['label'],
+                          items: CartState.itemsByCategory[item['label']] ?? [
+                            {'name': 'Sample Item 1', 'price': '\$10.00'},
+                            {'name': 'Sample Item 2', 'price': '\$12.00'},
+                            {'name': 'Sample Item 3', 'price': '\$15.00'},
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Food Items'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

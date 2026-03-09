@@ -66,3 +66,27 @@ that has a + button on bottom right
 32. [x] Change the adding of rows to be adding a textbox that allows multiple lines of text in description screen
 
 33. [x] Make the exit button be in the button middle of screen
+
+34. [x] Change start eating button in restaurant to say exit have the restaurant name and slogan be textboxes that lets you wrote in and center the text when goes to finalized_restaurant
+
+35. [x] Keep the textboxes in restaurant to be left aligned
+
+36. [x] Have a new button Next to the exit button that goes to the menu screen 
+
+37. [x] On menu screen have a Exit button on bottom middle of screen that goes to finalized_menu screen
+
+38. [x] On items screen have a Exit button on bottom middle of screen that goes to finalized_item screen
+
+39. [x] Make the start eating button in finalized_restaurant screen to to finalized_menu have the food items button in finalized_menu got finalized_items and more information button in finalized_items go to finalized_description
+
+40. [x] have the back button in app bar if in finalized_description go to finalized_item, if in finalized_item go to finalized_menu, if in finalized_menu go to finalized_restaurant
+
+41. [x] In finalized_menu have the title only be Menu and in finalized_description have the title Only be Description
+
+42. [x] if exit button is pressed on any of the screens have the back arrow button in app bar not go back to the previous screen but the finalized screen before it if in finalized_description go to finalized_item, if in finalized_item go to finalized_menu, if in finalized_menu go to finalized_restaurant
+
+43. [x] Seperate descriptions file to seperate widgets to make smaller
+
+44. [x] seperate any code into seperate widgets in same file to make smaller
+
+45. [x] Give widget a different name rather than give it an entire new class and then call that widget in the code

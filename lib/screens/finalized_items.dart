@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
-import 'description.dart';
+import 'finalized_description.dart';
+import 'finalized_menu.dart';
 import 'cart.dart';
 import '../cart_state.dart';
 
@@ -21,11 +22,68 @@ class FinalizedItemsScreen extends StatefulWidget {
 class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
   @override
   Widget build(BuildContext context) {
+    final cartFAB = Stack(
+      children: [
+        FloatingActionButton(
+          heroTag: 'cartFAB_finalized',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CartScreen()),
+            ).then((_) {
+              setState(() {});
+            });
+          },
+          backgroundColor: Colors.blueAccent,
+          child: const Icon(Icons.shopping_cart, color: Colors.white),
+        ),
+        if (CartState.items.isNotEmpty)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              constraints: const BoxConstraints(
+                minWidth: 20,
+                minHeight: 20,
+              ),
+              child: Text(
+                '${CartState.items.length}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.category} Items'),
+        title: Text('${widget.category} Items', style: const TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            // Explicitly navigate to FinalizedMenuScreen on back
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FinalizedMenuScreen(
+                  menuItems: CartState.menuItems,
+                ),
+              ),
+            );
+          },
+        ),
       ),
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -37,63 +95,22 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
               itemCount: widget.items.length,
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                return _buildItemRow(context, index);
+                final item = widget.items[index];
+                return _buildItemRow(item);
               },
             ),
           ),
           Positioned(
             bottom: 16,
             left: 16,
-            child: Stack(
-              children: [
-                FloatingActionButton(
-                  heroTag: 'cartFAB_finalized',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const CartScreen()),
-                    ).then((_) {
-                      setState(() {});
-                    });
-                  },
-                  backgroundColor: Colors.blueAccent,
-                  child: const Icon(Icons.shopping_cart, color: Colors.white),
-                ),
-                if (CartState.items.isNotEmpty)
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 20,
-                        minHeight: 20,
-                      ),
-                      child: Text(
-                        '${CartState.items.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            child: cartFAB,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildItemRow(BuildContext context, int index) {
-    final item = widget.items[index];
+  Widget _buildItemRow(Map<String, String> item) {
     final name = item['name']!;
     final price = item['price']!;
 
@@ -126,7 +143,12 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DescriptionScreen(itemName: name),
+                  builder: (context) => FinalizedDescriptionScreen(
+                    itemName: name,
+                    descriptionRows: CartState.descriptionRowsByItem[name] ?? [],
+                    showSample: true,
+                    category: widget.category,
+                  ),
                 ),
               );
             },

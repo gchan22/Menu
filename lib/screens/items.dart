@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
 import 'description.dart';
 import 'cart.dart';
+import 'finalized_items.dart';
 import '../cart_state.dart';
 
 class ItemsScreen extends StatefulWidget {
@@ -14,14 +15,86 @@ class ItemsScreen extends StatefulWidget {
 }
 
 class _ItemsScreenState extends State<ItemsScreen> {
-  final List<Map<String, String>> _items = [
-    {'name': 'Sample Item 1', 'price': '\$10.00'},
-    {'name': 'Sample Item 2', 'price': '\$12.00'},
-    {'name': 'Sample Item 3', 'price': '\$15.00'},
-  ];
+  late List<Map<String, String>> _items;
+
+  @override
+  void initState() {
+    super.initState();
+    _items = List.from(CartState.itemsByCategory[widget.category] ?? [
+      {'name': 'Sample Item 1', 'price': '\$10.00'},
+      {'name': 'Sample Item 2', 'price': '\$12.00'},
+      {'name': 'Sample Item 3', 'price': '\$15.00'},
+    ]);
+  }
+
+  void _saveData() {
+    CartState.updateCategoryItems(widget.category, _items);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cartFAB = Stack(
+      children: [
+        FloatingActionButton(
+          heroTag: 'cartFAB',
+          onPressed: () {
+            _saveData();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CartScreen()),
+            ).then((_) {
+              setState(() {});
+            });
+          },
+          backgroundColor: Colors.blueAccent,
+          child: const Icon(Icons.shopping_cart, color: Colors.white),
+        ),
+        if (CartState.items.isNotEmpty)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              constraints: const BoxConstraints(
+                minWidth: 20,
+                minHeight: 20,
+              ),
+              child: Text(
+                '${CartState.items.length}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
+    );
+
+    final exitButton = Center(
+      child: ElevatedButton(
+        onPressed: () {
+          _saveData();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FinalizedItemsScreen(
+                category: widget.category,
+                items: _items,
+              ),
+            ),
+          );
+        },
+        child: const Text('Exit'),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.category} Items'),
@@ -33,61 +106,26 @@ class _ItemsScreenState extends State<ItemsScreen> {
         children: [
           const Backdrop(),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 80.0),
             child: ListView.separated(
               itemCount: _items.length,
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                return _buildItemRow(context, index);
+                final item = _items[index];
+                return _buildItemRow(item, index);
               },
             ),
           ),
           Positioned(
             bottom: 16,
             left: 16,
-            child: Stack(
-              children: [
-                FloatingActionButton(
-                  heroTag: 'cartFAB',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const CartScreen()),
-                    ).then((_) {
-                      // Rebuild when returning from cart screen in case items were removed
-                      setState(() {});
-                    });
-                  },
-                  backgroundColor: Colors.blueAccent,
-                  child: const Icon(Icons.shopping_cart, color: Colors.white),
-                ),
-                if (CartState.items.isNotEmpty)
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 20,
-                        minHeight: 20,
-                      ),
-                      child: Text(
-                        '${CartState.items.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            child: cartFAB,
+          ),
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: exitButton,
           ),
         ],
       ),
@@ -136,6 +174,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                       'price': priceController.text,
                     });
                   });
+                  _saveData();
                   Navigator.pop(context);
                 }
               },
@@ -147,8 +186,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
     );
   }
 
-  Widget _buildItemRow(BuildContext context, int index) {
-    final item = _items[index];
+  Widget _buildItemRow(Map<String, String> item, int index) {
     final name = item['name']!;
     final price = item['price']!;
 
@@ -178,10 +216,14 @@ class _ItemsScreenState extends State<ItemsScreen> {
           ),
           ElevatedButton(
             onPressed: () {
+              _saveData();
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DescriptionScreen(itemName: name),
+                  builder: (context) => DescriptionScreen(
+                    itemName: name,
+                    category: widget.category,
+                  ),
                 ),
               );
             },
@@ -193,6 +235,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
               setState(() {
                 _items.removeAt(index);
               });
+              _saveData();
             },
           ),
         ],

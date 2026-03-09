@@ -12,6 +12,20 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    final cartTitle = Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white70,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Text(
+        'Cart',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Cart'),
@@ -27,21 +41,11 @@ class _CartScreenState extends State<CartScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      'Cart',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  cartTitle,
                   const SizedBox(height: 20),
-                  ...CartState.items.map((item) => _buildCartRow(item)).toList(),
+                  ...CartState.items.map((item) {
+                    return _buildCartRow(item);
+                  }).toList(),
                 ],
               ),
             ),
