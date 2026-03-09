@@ -4,9 +4,10 @@ import '../widgets/custom_button.dart';
 import 'finalized_description.dart';
 import '../cart_state.dart';
 
+/// DescriptionScreen allows users to add and edit multiple text rows describing a specific food item.
 class DescriptionScreen extends StatefulWidget {
   final String itemName;
-  final String category; // Added category
+  final String category; // Used for navigation back to the correct category list
 
   const DescriptionScreen({
     super.key,
@@ -19,11 +20,13 @@ class DescriptionScreen extends StatefulWidget {
 }
 
 class _DescriptionScreenState extends State<DescriptionScreen> {
+  // A list of controllers to manage each dynamic description text field
   final List<TextEditingController> _descriptionControllers = [];
 
   @override
   void initState() {
     super.initState();
+    // Pre-populate with existing descriptions from global state
     final existingRows = CartState.descriptionRowsByItem[widget.itemName] ?? [];
     for (var row in existingRows) {
       _descriptionControllers.add(TextEditingController(text: row));
@@ -32,12 +35,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
   @override
   void dispose() {
+    // Dispose all dynamic controllers to prevent memory leaks
     for (var controller in _descriptionControllers) {
       controller.dispose();
     }
     super.dispose();
   }
 
+  /// Saves all non-empty description rows to the global state.
   void _saveData() {
     CartState.updateDescriptionRows(
       widget.itemName,
@@ -45,6 +50,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
     );
   }
 
+  /// Adds a new empty text field for a new description row.
   void _addTextBox() {
     setState(() {
       _descriptionControllers.add(TextEditingController());
@@ -68,6 +74,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
             padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 80),
             child: Column(
               children: [
+                // Item Name title
                 Text(
                   widget.itemName,
                   style: const TextStyle(
@@ -77,6 +84,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
+                // Dynamic list of description input rows
                 Expanded(
                   child: ListView.separated(
                     itemCount: _descriptionControllers.length,
@@ -89,6 +97,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
               ],
             ),
           ),
+          // Exit button at the bottom center
           Positioned(
             bottom: 16,
             left: 0,
@@ -98,6 +107,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 label: 'Exit',
                 onPressed: () {
                   _saveData();
+                  // Navigate to the finalized preview of the item description
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -108,7 +118,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             .where((t) => t.isNotEmpty)
                             .toList(),
                         showSample: false,
-                        category: widget.category, // Pass category
+                        category: widget.category,
                       ),
                     ),
                   );
@@ -118,6 +128,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           ),
         ],
       ),
+      // Floating action button to add more description rows
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _addTextBox,
         label: const Text('Add Description'),
@@ -126,6 +137,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
     );
   }
 
+  /// Builds an individual editable row for description text with a delete button.
   Widget _buildDescriptionInputRow(int index) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -139,7 +151,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           Expanded(
             child: TextField(
               controller: _descriptionControllers[index],
-              maxLines: null,
+              maxLines: null, // Allows the text field to grow vertically
               onChanged: (_) => _saveData(),
               decoration: const InputDecoration(
                 hintText: 'Enter description...',
@@ -148,6 +160,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
               style: const TextStyle(fontSize: 16),
             ),
           ),
+          // Button to remove this specific row
           IconButton(
             icon: const Icon(Icons.remove_circle, color: Colors.red),
             onPressed: () {

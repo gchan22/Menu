@@ -7,6 +7,7 @@ import 'cart.dart';
 import '../cart_state.dart';
 import '../models/category_item.dart';
 
+/// FinalizedItemsScreen displays a read-only list of food items in a category for customers.
 class FinalizedItemsScreen extends StatefulWidget {
   final String category;
   final List<CategoryItemModel> items;
@@ -24,6 +25,7 @@ class FinalizedItemsScreen extends StatefulWidget {
 class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
   @override
   Widget build(BuildContext context) {
+    // Shopping cart FAB with badge, same as in editing screen but for finalized view
     final cartFAB = Stack(
       children: [
         FloatingActionButton(
@@ -75,7 +77,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            // Explicitly navigate to FinalizedMenuScreen on back
+            // Back navigation leads to the finalized menu category list
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -112,6 +114,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
     );
   }
 
+  /// Builds a UI row for a single item in the finalized items list.
   Widget _buildItemRow(CategoryItemModel item) {
     final name = item.name;
     final price = item.price;
@@ -129,6 +132,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
           ),
           Text(price, style: const TextStyle(fontSize: 18, color: Colors.green)),
           const SizedBox(width: 8),
+          // Customer can still add items to cart from the finalized view
           IconButton(
             icon: const Icon(Icons.add, color: Colors.blueAccent),
             onPressed: () {
@@ -140,6 +144,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
               );
             },
           ),
+          // View detailed item description in finalized mode
           CustomButton(
             label: 'More Information',
             onPressed: () {

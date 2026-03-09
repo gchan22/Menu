@@ -5,6 +5,7 @@ import 'finalized_menu.dart';
 import 'restaurant.dart';
 import '../cart_state.dart';
 
+/// FinalizedRestaurantScreen displays a read-only preview of the restaurant name and slogan.
 class FinalizedRestaurantScreen extends StatelessWidget {
   final String restaurantName;
   final String slogan;
@@ -17,6 +18,7 @@ class FinalizedRestaurantScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A special button to return to the setup screen and start over
     final newMenuButton = Positioned(
       top: 40,
       left: 16,
@@ -25,6 +27,7 @@ class FinalizedRestaurantScreen extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 242, 109, 153),
         foregroundColor: Colors.black,
         onPressed: () {
+          // Clears navigation stack and goes back to the initial restaurant setup
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const RestaurantScreen()),
@@ -34,18 +37,21 @@ class FinalizedRestaurantScreen extends StatelessWidget {
       ),
     );
 
+    // Displays the restaurant name in a styled container
     final restaurantNameBox = _buildInfoBox(
       text: restaurantName,
       fontSize: 24,
       fontWeight: FontWeight.bold,
     );
 
+    // Displays the slogan in a styled container
     final sloganBox = _buildInfoBox(
       text: slogan,
       fontSize: 18,
       fontStyle: FontStyle.italic,
     );
 
+    // Button to proceed to the finalized menu viewing screen
     final startEatingButton = CustomButton(
       label: 'Start Eating',
       onPressed: () {
@@ -83,6 +89,7 @@ class FinalizedRestaurantScreen extends StatelessWidget {
     );
   }
 
+  /// Helper to build a generic styled container for finalized text information.
   Widget _buildInfoBox({
     required String text,
     required double fontSize,

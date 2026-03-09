@@ -3,11 +3,12 @@ import '../widgets/backdrop.dart';
 import 'finalized_items.dart';
 import '../cart_state.dart';
 
+/// FinalizedDescriptionScreen displays a read-only view of all description rows for a food item.
 class FinalizedDescriptionScreen extends StatelessWidget {
   final String itemName;
   final List<String> descriptionRows;
   final bool showSample;
-  final String? category; // Pass category to know where to go back
+  final String? category; // Category info used to navigate back correctly
 
   const FinalizedDescriptionScreen({
     super.key,
@@ -27,6 +28,7 @@ class FinalizedDescriptionScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
+            // Explicit navigation back to the correct category item list
             if (category != null) {
               Navigator.pushReplacement(
                 context,
@@ -51,6 +53,7 @@ class FinalizedDescriptionScreen extends StatelessWidget {
             padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
             child: Column(
               children: [
+                // Item Name title box
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
@@ -68,10 +71,12 @@ class FinalizedDescriptionScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+                // Optional sample description row
                 if (showSample) ...[
                   _buildDescriptionDisplayRow('Sample description', isSample: true),
                   const SizedBox(height: 10),
                 ],
+                // List of finalized description rows
                 Expanded(
                   child: ListView.separated(
                     itemCount: descriptionRows.length,
@@ -89,6 +94,7 @@ class FinalizedDescriptionScreen extends StatelessWidget {
     );
   }
 
+  /// Builds a read-only UI row for a single piece of item description.
   Widget _buildDescriptionDisplayRow(String text, {bool isSample = false}) {
     return Container(
       width: double.infinity,

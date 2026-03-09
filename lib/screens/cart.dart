@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
 import '../cart_state.dart';
 
+/// CartScreen displays the list of items the user has added to their virtual cart.
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -12,6 +13,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    // A styled header box for the cart screen
     final cartTitle = Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -43,6 +45,7 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   cartTitle,
                   const SizedBox(height: 20),
+                  // Render a row for each item in the cart
                   ...CartState.items.map((item) {
                     return _buildCartRow(item);
                   }).toList(),
@@ -55,6 +58,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
+  /// Builds a UI row for an item in the cart, including a remove button.
   Widget _buildCartRow(String itemName) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -73,6 +77,7 @@ class _CartScreenState extends State<CartScreen> {
               Text(itemName, style: const TextStyle(fontSize: 18)),
             ],
           ),
+          // Button to remove the item from the cart state
           IconButton(
             icon: const Icon(Icons.remove_circle, color: Colors.red),
             onPressed: () {

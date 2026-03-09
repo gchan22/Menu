@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Backdrop provides a consistent background for all screens in the application.
+/// It uses a linear gradient transitioning from light blue to green.
 class Backdrop extends StatelessWidget {
   const Backdrop({super.key});
 
@@ -11,8 +13,8 @@ class Backdrop extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.lightBlueAccent,
-            Colors.greenAccent,
+            Color.fromARGB(255, 173, 216, 230), // Light Blue
+            Color.fromARGB(255, 144, 238, 144), // Green
           ],
         ),
       ),

@@ -8,6 +8,7 @@ import 'finalized_items.dart';
 import '../cart_state.dart';
 import '../models/category_item.dart';
 
+/// ItemsScreen displays and manages a list of food items within a specific category.
 class ItemsScreen extends StatefulWidget {
   final String category;
 
@@ -23,6 +24,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
   @override
   void initState() {
     super.initState();
+    // Load items for this category from global state, or provide samples if empty
     _items = List.from(CartState.itemsByCategory[widget.category] ?? [
       CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
       CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
@@ -30,22 +32,26 @@ class _ItemsScreenState extends State<ItemsScreen> {
     ]);
   }
 
+  /// Saves the current list of items for this category to the global state.
   void _saveData() {
     CartState.updateCategoryItems(widget.category, _items);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Floating action button for the shopping cart with a badge showing item count
     final cartFAB = Stack(
       children: [
         FloatingActionButton(
           heroTag: 'cartFAB',
           onPressed: () {
             _saveData();
+            // Navigate to the shopping cart screen
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CartScreen()),
             ).then((_) {
+              // Refresh count when returning from cart
               setState(() {});
             });
           },
@@ -80,6 +86,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
       ],
     );
 
+    // Button to exit editing and view the finalized items list
     final exitButton = Center(
       child: CustomButton(
         label: 'Exit',
@@ -141,6 +148,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
     );
   }
 
+  /// Displays a dialog to add a new food item with a name and price.
   void _showAddItemDialog() {
     final nameController = TextEditingController();
     final priceController = TextEditingController();
@@ -191,6 +199,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
     );
   }
 
+  /// Builds a UI row for an individual food item.
   Widget _buildItemRow(CategoryItemModel item, int index) {
     final name = item.name;
     final price = item.price;
@@ -208,6 +217,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
           ),
           Text(price, style: const TextStyle(fontSize: 18, color: Colors.green)),
           const SizedBox(width: 8),
+          // Add to cart button
           IconButton(
             icon: const Icon(Icons.add, color: Colors.blueAccent),
             onPressed: () {
@@ -219,6 +229,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
               );
             },
           ),
+          // Button to view/edit item descriptions
           CustomButton(
             label: 'More Information',
             onPressed: () {
@@ -234,6 +245,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
               );
             },
           ),
+          // Button to remove item from list
           IconButton(
             icon: const Icon(Icons.remove_circle, color: Colors.red),
             onPressed: () {

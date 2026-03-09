@@ -7,6 +7,7 @@ import 'finalized_menu.dart';
 import '../cart_state.dart';
 import '../models/menu_item.dart';
 
+/// MenuScreen provides an interface to manage food categories (e.g., Chicken, Beef, Soda).
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -20,13 +21,16 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     super.initState();
+    // Load menu categories from global state
     _menuItems = List.from(CartState.menuItems);
   }
 
+  /// Syncs local menu changes to the global CartState.
   void _saveData() {
     CartState.updateMenuItems(_menuItems);
   }
 
+  /// Displays a dialog allowing the user to change the icon for a menu category.
   void _pickIcon(int index) {
     showDialog(
       context: context,
@@ -75,6 +79,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
+  /// Displays a dialog to add a new menu category with a name and icon.
   void _addMenuItem() {
     final TextEditingController controller = TextEditingController();
     IconData selectedIcon = Icons.restaurant;
@@ -151,6 +156,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Navigation button to the finalized menu view
     final exitButton = Center(
       child: CustomButton(
         label: 'Exit',
@@ -203,6 +209,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
+  /// Builds a row representing a single menu category.
   Widget _buildMenuItemRow(MenuItemModel item, int index) {
     return Row(
       children: [
@@ -231,6 +238,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       label: 'Food Items',
                       onPressed: () {
                         _saveData();
+                        // Navigate to specific items within this category
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -240,6 +248,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       },
                     ),
                     const SizedBox(width: 8),
+                    // Button to remove the category
                     IconButton(
                       icon: const Icon(Icons.remove_circle, color: Colors.red),
                       onPressed: () {

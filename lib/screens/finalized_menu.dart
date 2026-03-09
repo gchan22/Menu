@@ -7,6 +7,7 @@ import '../cart_state.dart';
 import '../models/menu_item.dart';
 import '../models/category_item.dart';
 
+/// FinalizedMenuScreen displays a read-only list of menu categories for customers to browse.
 class FinalizedMenuScreen extends StatelessWidget {
   final List<MenuItemModel> menuItems;
 
@@ -22,7 +23,7 @@ class FinalizedMenuScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            // Explicitly navigate to FinalizedRestaurantScreen on back
+            // Navigation back leads explicitly to the finalized restaurant preview
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -55,6 +56,7 @@ class FinalizedMenuScreen extends StatelessWidget {
     );
   }
 
+  /// Builds a UI row for a single menu category in the finalized view.
   Widget _buildMenuItemRow(BuildContext context, MenuItemModel item) {
     return Row(
       children: [
@@ -74,6 +76,7 @@ class FinalizedMenuScreen extends StatelessWidget {
                   item.label,
                   style: const TextStyle(fontSize: 18),
                 ),
+                // Button to view finalized items within this category
                 CustomButton(
                   label: 'Food Items',
                   onPressed: () {
