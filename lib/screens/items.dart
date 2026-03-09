@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_text_field.dart';
 import 'description.dart';
 import 'cart.dart';
 import 'finalized_items.dart';
 import '../cart_state.dart';
+import '../models/category_item.dart';
 
 class ItemsScreen extends StatefulWidget {
   final String category;
@@ -15,15 +18,15 @@ class ItemsScreen extends StatefulWidget {
 }
 
 class _ItemsScreenState extends State<ItemsScreen> {
-  late List<Map<String, String>> _items;
+  late List<CategoryItemModel> _items;
 
   @override
   void initState() {
     super.initState();
     _items = List.from(CartState.itemsByCategory[widget.category] ?? [
-      {'name': 'Sample Item 1', 'price': '\$10.00'},
-      {'name': 'Sample Item 2', 'price': '\$12.00'},
-      {'name': 'Sample Item 3', 'price': '\$15.00'},
+      CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
+      CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
+      CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
     ]);
   }
 
@@ -78,7 +81,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
     );
 
     final exitButton = Center(
-      child: ElevatedButton(
+      child: CustomButton(
+        label: 'Exit',
         onPressed: () {
           _saveData();
           Navigator.push(
@@ -91,7 +95,6 @@ class _ItemsScreenState extends State<ItemsScreen> {
             ),
           );
         },
-        child: const Text('Exit'),
       ),
     );
 
@@ -150,13 +153,15 @@ class _ItemsScreenState extends State<ItemsScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
+              CustomTextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Item Name'),
+                label: 'Item Name',
+                filled: false,
               ),
-              TextField(
+              CustomTextField(
                 controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price (e.g., \$10.00)'),
+                label: 'Price (e.g., \$10.00)',
+                filled: false,
               ),
             ],
           ),
@@ -169,10 +174,10 @@ class _ItemsScreenState extends State<ItemsScreen> {
               onPressed: () {
                 if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
                   setState(() {
-                    _items.add({
-                      'name': nameController.text,
-                      'price': priceController.text,
-                    });
+                    _items.add(CategoryItemModel(
+                      name: nameController.text,
+                      price: priceController.text,
+                    ));
                   });
                   _saveData();
                   Navigator.pop(context);
@@ -186,9 +191,9 @@ class _ItemsScreenState extends State<ItemsScreen> {
     );
   }
 
-  Widget _buildItemRow(Map<String, String> item, int index) {
-    final name = item['name']!;
-    final price = item['price']!;
+  Widget _buildItemRow(CategoryItemModel item, int index) {
+    final name = item.name;
+    final price = item.price;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -214,7 +219,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
               );
             },
           ),
-          ElevatedButton(
+          CustomButton(
+            label: 'More Information',
             onPressed: () {
               _saveData();
               Navigator.push(
@@ -227,7 +233,6 @@ class _ItemsScreenState extends State<ItemsScreen> {
                 ),
               );
             },
-            child: const Text('More Information'),
           ),
           IconButton(
             icon: const Icon(Icons.remove_circle, color: Colors.red),

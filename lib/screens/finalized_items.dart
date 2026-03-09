@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/custom_button.dart';
 import 'finalized_description.dart';
 import 'finalized_menu.dart';
 import 'cart.dart';
 import '../cart_state.dart';
+import '../models/category_item.dart';
 
 class FinalizedItemsScreen extends StatefulWidget {
   final String category;
-  final List<Map<String, String>> items;
+  final List<CategoryItemModel> items;
 
   const FinalizedItemsScreen({
     super.key,
@@ -110,9 +112,9 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
     );
   }
 
-  Widget _buildItemRow(Map<String, String> item) {
-    final name = item['name']!;
-    final price = item['price']!;
+  Widget _buildItemRow(CategoryItemModel item) {
+    final name = item.name;
+    final price = item.price;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -138,7 +140,8 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
               );
             },
           ),
-          ElevatedButton(
+          CustomButton(
+            label: 'More Information',
             onPressed: () {
               Navigator.push(
                 context,
@@ -152,7 +155,6 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
                 ),
               );
             },
-            child: const Text('More Information'),
           ),
         ],
       ),

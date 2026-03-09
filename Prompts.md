@@ -90,3 +90,11 @@ that has a + button on bottom right
 44. [x] seperate any code into seperate widgets in same file to make smaller
 
 45. [x] Give widget a different name rather than give it an entire new class and then call that widget in the code
+
+46. [x] create a models directory that conatins Pure Dart data classes and move related data inside
+
+47. [x] in the widgets directory have Reusable, isolated UI components (e.g., custom_button.dart) 
+
+48. [x] Move descritption files beck to description if not a reuseable widget
+
+49. [x] In menu screen start the text box of restaurant name and slogan empty rather than say default

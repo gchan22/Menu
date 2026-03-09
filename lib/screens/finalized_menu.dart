@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/custom_button.dart';
 import 'finalized_items.dart';
 import 'finalized_restaurant.dart';
 import '../cart_state.dart';
+import '../models/menu_item.dart';
+import '../models/category_item.dart';
 
 class FinalizedMenuScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> menuItems;
+  final List<MenuItemModel> menuItems;
 
   const FinalizedMenuScreen({super.key, required this.menuItems});
 
@@ -52,10 +55,10 @@ class FinalizedMenuScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItemRow(BuildContext context, Map<String, dynamic> item) {
+  Widget _buildMenuItemRow(BuildContext context, MenuItemModel item) {
     return Row(
       children: [
-        Icon(item['icon'], size: 30, color: Colors.white),
+        Icon(item.icon, size: 30, color: Colors.white),
         const SizedBox(width: 10),
         Expanded(
           child: Container(
@@ -68,26 +71,26 @@ class FinalizedMenuScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  item['label'],
+                  item.label,
                   style: const TextStyle(fontSize: 18),
                 ),
-                ElevatedButton(
+                CustomButton(
+                  label: 'Food Items',
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => FinalizedItemsScreen(
-                          category: item['label'],
-                          items: CartState.itemsByCategory[item['label']] ?? [
-                            {'name': 'Sample Item 1', 'price': '\$10.00'},
-                            {'name': 'Sample Item 2', 'price': '\$12.00'},
-                            {'name': 'Sample Item 3', 'price': '\$15.00'},
+                          category: item.label,
+                          items: CartState.itemsByCategory[item.label] ?? [
+                            CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
+                            CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
+                            CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
                           ],
                         ),
                       ),
                     );
                   },
-                  child: const Text('Food Items'),
                 ),
               ],
             ),

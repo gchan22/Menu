@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'models/menu_item.dart';
+import 'models/category_item.dart';
+import 'models/restaurant_info.dart';
 
 class CartState {
   static final List<String> items = [];
   
-  static String restaurantName = 'Default Restaurant';
-  static String slogan = 'Default Slogan';
-  static List<Map<String, dynamic>> menuItems = [
-    {'icon': Icons.restaurant, 'label': 'Chicken'},
-    {'icon': Icons.restaurant, 'label': 'Beef'},
-    {'icon': Icons.restaurant, 'label': 'Pork'},
-    {'icon': Icons.local_drink, 'label': 'Soda'},
+  static RestaurantInfoModel restaurantInfo = RestaurantInfoModel(
+    name: '',
+    slogan: '',
+  );
+
+  static List<MenuItemModel> menuItems = [
+    MenuItemModel(icon: Icons.restaurant, label: 'Chicken'),
+    MenuItemModel(icon: Icons.restaurant, label: 'Beef'),
+    MenuItemModel(icon: Icons.restaurant, label: 'Pork'),
+    MenuItemModel(icon: Icons.local_drink, label: 'Soda'),
   ];
-  static Map<String, List<Map<String, String>>> itemsByCategory = {};
+  static Map<String, List<CategoryItemModel>> itemsByCategory = {};
   static Map<String, List<String>> descriptionRowsByItem = {};
+
+  static String get restaurantName => restaurantInfo.name;
+  static String get slogan => restaurantInfo.slogan;
 
   static void addItem(String itemName) {
     items.add(itemName);
@@ -23,15 +32,14 @@ class CartState {
   }
 
   static void updateRestaurantInfo(String name, String slg) {
-    restaurantName = name;
-    slogan = slg;
+    restaurantInfo = RestaurantInfoModel(name: name, slogan: slg);
   }
 
-  static void updateMenuItems(List<Map<String, dynamic>> menuItms) {
-    menuItems = menuItms;
+  static void updateMenuItems(List<MenuItemModel> itms) {
+    menuItems = itms;
   }
 
-  static void updateCategoryItems(String category, List<Map<String, String>> itms) {
+  static void updateCategoryItems(String category, List<CategoryItemModel> itms) {
     itemsByCategory[category] = itms;
   }
 

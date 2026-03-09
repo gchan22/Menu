@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/custom_button.dart';
 import 'finalized_description.dart';
 import '../cart_state.dart';
 
@@ -93,7 +94,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
             left: 0,
             right: 0,
             child: Center(
-              child: ElevatedButton(
+              child: CustomButton(
+                label: 'Exit',
                 onPressed: () {
                   _saveData();
                   Navigator.push(
@@ -111,7 +113,6 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     ),
                   );
                 },
-                child: const Text('Exit'),
               ),
             ),
           ),

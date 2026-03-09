@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_text_field.dart';
 import 'finalized_restaurant.dart';
 import 'menu.dart';
 import '../cart_state.dart';
@@ -35,30 +37,21 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final nameField = TextField(
+    final nameField = CustomTextField(
       controller: _nameController,
-      decoration: const InputDecoration(
-        labelText: 'Restaurant Name',
-        alignLabelWithHint: true,
-        filled: true,
-        fillColor: Colors.white70,
-      ),
+      label: 'Restaurant Name',
     );
 
-    final sloganField = TextField(
+    final sloganField = CustomTextField(
       controller: _sloganController,
-      decoration: const InputDecoration(
-        labelText: 'Slogan',
-        alignLabelWithHint: true,
-        filled: true,
-        fillColor: Colors.white70,
-      ),
+      label: 'Slogan',
     );
 
     final actionButtons = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(
+        CustomButton(
+          label: 'Exit',
           onPressed: () {
             _saveData();
             Navigator.push(
@@ -71,10 +64,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
               ),
             );
           },
-          child: const Text('Exit'),
         ),
         const SizedBox(width: 20),
-        ElevatedButton(
+        CustomButton(
+          label: 'Menu',
           onPressed: () {
             _saveData();
             Navigator.push(
@@ -84,7 +77,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
               ),
             );
           },
-          child: const Text('Menu'),
         ),
       ],
     );

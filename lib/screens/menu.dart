@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_text_field.dart';
 import 'items.dart';
 import 'finalized_menu.dart';
 import '../cart_state.dart';
+import '../models/menu_item.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -12,7 +15,7 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  late List<Map<String, dynamic>> _menuItems;
+  late List<MenuItemModel> _menuItems;
 
   @override
   void initState() {
@@ -36,7 +39,7 @@ class _MenuScreenState extends State<MenuScreen> {
               IconButton(
                 icon: const Icon(Icons.restaurant),
                 onPressed: () {
-                  setState(() => _menuItems[index]['icon'] = Icons.restaurant);
+                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.restaurant, label: _menuItems[index].label));
                   _saveData();
                   Navigator.pop(context);
                 },
@@ -44,7 +47,7 @@ class _MenuScreenState extends State<MenuScreen> {
               IconButton(
                 icon: const Icon(Icons.local_drink),
                 onPressed: () {
-                  setState(() => _menuItems[index]['icon'] = Icons.local_drink);
+                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.local_drink, label: _menuItems[index].label));
                   _saveData();
                   Navigator.pop(context);
                 },
@@ -52,7 +55,7 @@ class _MenuScreenState extends State<MenuScreen> {
               IconButton(
                 icon: const Icon(Icons.fastfood),
                 onPressed: () {
-                  setState(() => _menuItems[index]['icon'] = Icons.fastfood);
+                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.fastfood, label: _menuItems[index].label));
                   _saveData();
                   Navigator.pop(context);
                 },
@@ -60,7 +63,7 @@ class _MenuScreenState extends State<MenuScreen> {
               IconButton(
                 icon: const Icon(Icons.icecream),
                 onPressed: () {
-                  setState(() => _menuItems[index]['icon'] = Icons.icecream);
+                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.icecream, label: _menuItems[index].label));
                   _saveData();
                   Navigator.pop(context);
                 },
@@ -86,9 +89,10 @@ class _MenuScreenState extends State<MenuScreen> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(
+                  CustomTextField(
                     controller: controller,
-                    decoration: const InputDecoration(labelText: 'Item Name'),
+                    label: 'Item Name',
+                    filled: false,
                   ),
                   const SizedBox(height: 20),
                   const Text('Select Icon:'),
@@ -126,10 +130,10 @@ class _MenuScreenState extends State<MenuScreen> {
                   onPressed: () {
                     if (controller.text.isNotEmpty) {
                       setState(() {
-                        _menuItems.add({
-                          'icon': selectedIcon,
-                          'label': controller.text,
-                        });
+                        _menuItems.add(MenuItemModel(
+                          icon: selectedIcon,
+                          label: controller.text,
+                        ));
                       });
                       _saveData();
                       Navigator.pop(context);
@@ -148,7 +152,8 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     final exitButton = Center(
-      child: ElevatedButton(
+      child: CustomButton(
+        label: 'Exit',
         onPressed: () {
           _saveData();
           Navigator.push(
@@ -158,7 +163,6 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
           );
         },
-        child: const Text('Exit'),
       ),
     );
 
@@ -199,11 +203,11 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget _buildMenuItemRow(Map<String, dynamic> item, int index) {
+  Widget _buildMenuItemRow(MenuItemModel item, int index) {
     return Row(
       children: [
         IconButton(
-          icon: Icon(item['icon'], size: 30, color: Colors.white),
+          icon: Icon(item.icon, size: 30, color: Colors.white),
           onPressed: () => _pickIcon(index),
         ),
         const SizedBox(width: 10),
@@ -218,22 +222,22 @@ class _MenuScreenState extends State<MenuScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  item['label'],
+                  item.label,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Row(
                   children: [
-                    ElevatedButton(
+                    CustomButton(
+                      label: 'Food Items',
                       onPressed: () {
                         _saveData();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ItemsScreen(category: item['label']),
+                            builder: (context) => ItemsScreen(category: item.label),
                           ),
                         );
                       },
-                      child: const Text('Food Items'),
                     ),
                     const SizedBox(width: 8),
                     IconButton(

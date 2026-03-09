@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/custom_button.dart';
 import 'finalized_menu.dart';
 import 'restaurant.dart';
 import '../cart_state.dart';
@@ -19,11 +20,10 @@ class FinalizedRestaurantScreen extends StatelessWidget {
     final newMenuButton = Positioned(
       top: 40,
       left: 16,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 242, 109, 153),
-          foregroundColor: Colors.black,
-        ),
+      child: CustomButton(
+        label: 'New Menu',
+        backgroundColor: const Color.fromARGB(255, 242, 109, 153),
+        foregroundColor: Colors.black,
         onPressed: () {
           Navigator.pushAndRemoveUntil(
             context,
@@ -31,7 +31,6 @@ class FinalizedRestaurantScreen extends StatelessWidget {
             (route) => false,
           );
         },
-        child: const Text('New Menu'),
       ),
     );
 
@@ -47,7 +46,8 @@ class FinalizedRestaurantScreen extends StatelessWidget {
       fontStyle: FontStyle.italic,
     );
 
-    final startEatingButton = ElevatedButton(
+    final startEatingButton = CustomButton(
+      label: 'Start Eating',
       onPressed: () {
         Navigator.push(
           context,
@@ -58,7 +58,6 @@ class FinalizedRestaurantScreen extends StatelessWidget {
           ),
         );
       },
-      child: const Text('Start Eating'),
     );
 
     return Scaffold(
