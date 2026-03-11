@@ -6,8 +6,8 @@ import 'restaurant_info.dart';
 /// CartState is a central store for application data, acting as a simple state manager.
 /// It holds information about the restaurant, menu items, and the user's shopping cart.
 class CartState {
-  /// The list of item names currently in the user's shopping cart.
-  static final List<String> items = [];
+  /// The list of items currently in the user's shopping cart.
+  static final List<CategoryItemModel> items = [];
   
   /// Holds basic restaurant information like name and slogan.
   static RestaurantInfoModel restaurantInfo = RestaurantInfoModel(
@@ -33,14 +33,14 @@ class CartState {
   static String get restaurantName => restaurantInfo.name;
   static String get slogan => restaurantInfo.slogan;
 
-  /// Adds an item name to the global cart.
-  static void addItem(String itemName) {
-    items.add(itemName);
+  /// Adds a category item to the global cart.
+  static void addItem(CategoryItemModel item) {
+    items.add(item);
   }
 
-  /// Removes an item name from the global cart.
-  static void removeItem(String itemName) {
-    items.remove(itemName);
+  /// Removes a category item from the global cart.
+  static void removeItem(CategoryItemModel item) {
+    items.remove(item);
   }
 
   /// Updates the global restaurant name and slogan.

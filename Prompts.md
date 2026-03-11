@@ -102,3 +102,6 @@ that has a + button on bottom right
 50. [x] Create a services directory and in it include Backend communication logic (e.g., auth_service.dart, database_service.dart)
 
 51. [x] change the backdrop file so that the grandiant goes from blue to green
+
+52. [x] Add a row on the bottom of the cart screen centralized that shows the total 
+cost of all items in the cart as well as show the cost of each item in cart on each row of items

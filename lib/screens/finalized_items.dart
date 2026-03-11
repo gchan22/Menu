@@ -137,7 +137,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
             icon: const Icon(Icons.add, color: Colors.blueAccent),
             onPressed: () {
               setState(() {
-                CartState.addItem(name);
+                CartState.addItem(item);
               });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('$name added to cart!'), duration: const Duration(seconds: 1)),

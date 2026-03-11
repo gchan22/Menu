@@ -25,11 +25,18 @@ class _ItemsScreenState extends State<ItemsScreen> {
   void initState() {
     super.initState();
     // Load items for this category from global state, or provide samples if empty
-    _items = List.from(CartState.itemsByCategory[widget.category] ?? [
-      CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
-      CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
-      CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
-    ]);
+    final storedItems = CartState.itemsByCategory[widget.category];
+    if (storedItems != null) {
+      _items = List.from(storedItems);
+    } else {
+      _items = [
+        CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
+        CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
+        CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
+      ];
+      // Save these samples back to CartState immediately so they persist
+      CartState.updateCategoryItems(widget.category, _items);
+    }
   }
 
   /// Saves the current list of items for this category to the global state.
@@ -222,7 +229,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
             icon: const Icon(Icons.add, color: Colors.blueAccent),
             onPressed: () {
               setState(() {
-                CartState.addItem(name);
+                CartState.addItem(item);
               });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('$name added to cart!'), duration: const Duration(seconds: 1)),
