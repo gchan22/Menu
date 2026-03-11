@@ -4,7 +4,7 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'items.dart';
 import 'finalized_menu.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 import '../models/menu_item.dart';
 
 /// MenuScreen provides an interface to manage food categories (e.g., Chicken, Beef, Soda).

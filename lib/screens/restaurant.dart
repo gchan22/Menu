@@ -4,7 +4,7 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'finalized_restaurant.dart';
 import 'menu.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 
 /// RestaurantScreen allows the user to input the name and slogan of their restaurant.
 class RestaurantScreen extends StatefulWidget {

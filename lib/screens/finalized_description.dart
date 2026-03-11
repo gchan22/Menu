@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
 import 'finalized_items.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 
 /// FinalizedDescriptionScreen displays a read-only view of all description rows for a food item.
 class FinalizedDescriptionScreen extends StatelessWidget {

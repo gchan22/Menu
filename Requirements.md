@@ -1,7 +1,8 @@
 # Requirements for Digital Menu Creation Application
-
+Project Requirements: Digital Menu Creation Application
+Developer: George Chang
 ## 1. Introduction
-This document outlines the requirements for a digital menu creation application aimed at assisting small restaurants in transitioning from physical to digital menus. The application seeks to provide an easy-to-use, cost-effective solution for creating, managing, and presenting restaurant menus digitally, addressing the challenges associated with physical menus such as editing difficulties and professional appearance.
+Description: This document outlines the requirements for a digital menu creation application aimed at assisting small restaurants in transitioning from physical to digital menus. The application seeks to provide an easy-to-use, cost-effective solution for creating, managing, and presenting restaurant menus digitally, addressing the challenges associated with physical menus such as editing difficulties and professional appearance.
 
 ## 2. Core Features
 

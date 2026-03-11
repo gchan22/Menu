@@ -3,7 +3,7 @@ import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_items.dart';
 import 'finalized_restaurant.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 import '../models/menu_item.dart';
 import '../models/category_item.dart';
 

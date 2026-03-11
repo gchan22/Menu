@@ -3,7 +3,7 @@ import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_menu.dart';
 import 'restaurant.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 
 /// FinalizedRestaurantScreen displays a read-only preview of the restaurant name and slogan.
 class FinalizedRestaurantScreen extends StatelessWidget {

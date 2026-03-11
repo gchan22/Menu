@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 
 /// CartScreen displays the list of items the user has added to their virtual cart.
 class CartScreen extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'models/menu_item.dart';
-import 'models/category_item.dart';
-import 'models/restaurant_info.dart';
+import 'menu_item.dart';
+import 'category_item.dart';
+import 'restaurant_info.dart';
 
 /// CartState is a central store for application data, acting as a simple state manager.
 /// It holds information about the restaurant, menu items, and the user's shopping cart.

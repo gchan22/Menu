@@ -4,7 +4,7 @@ import '../widgets/custom_button.dart';
 import 'finalized_description.dart';
 import 'finalized_menu.dart';
 import 'cart.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 import '../models/category_item.dart';
 
 /// FinalizedItemsScreen displays a read-only list of food items in a category for customers.

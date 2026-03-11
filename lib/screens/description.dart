@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_description.dart';
-import '../cart_state.dart';
+import '../models/cart_state.dart';
 
 /// DescriptionScreen allows users to add and edit multiple text rows describing a specific food item.
 class DescriptionScreen extends StatefulWidget {

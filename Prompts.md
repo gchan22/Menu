@@ -98,3 +98,5 @@ that has a + button on bottom right
 48. [x] Move descritption files beck to description if not a reuseable widget
 
 49. [x] In menu screen start the text box of restaurant name and slogan empty rather than say default
+
+50. [x] Create a services directory and in it include Backend communication logic (e.g., auth_service.dart, database_service.dart)
