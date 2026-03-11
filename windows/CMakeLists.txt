@@ -2,6 +2,9 @@
 cmake_minimum_required(VERSION 3.14)
 project(project_final LANGUAGES CXX)
 
+# Fix compatibility issue with CMake 3.30+ and Firebase C++ SDK
+set(CMAKE_POLICY_VERSION_MINIMUM "3.5")
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "project_final")

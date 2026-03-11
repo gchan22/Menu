@@ -100,3 +100,5 @@ that has a + button on bottom right
 49. [x] In menu screen start the text box of restaurant name and slogan empty rather than say default
 
 50. [x] Create a services directory and in it include Backend communication logic (e.g., auth_service.dart, database_service.dart)
+
+51. [x] change the backdrop file so that the grandiant goes from blue to green
