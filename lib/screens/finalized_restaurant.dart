@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/info_box.dart';
 import 'finalized_menu.dart';
 import 'sign_in.dart';
 import '../providers/restaurant_provider.dart';
@@ -43,14 +44,14 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
     );
 
     // Displays the restaurant name in a styled container
-    final restaurantNameBox = _buildInfoBox(
+    final restaurantNameBox = InfoBox(
       text: info.name.isNotEmpty ? info.name : restaurantName,
       fontSize: 24,
       fontWeight: FontWeight.bold,
     );
 
     // Displays the slogan in a styled container
-    final sloganBox = _buildInfoBox(
+    final sloganBox = InfoBox(
       text: info.slogan.isNotEmpty ? info.slogan : slogan,
       fontSize: 18,
       fontStyle: FontStyle.italic,
@@ -90,32 +91,6 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
           ),
           newMenuButton, // Move to bottom to be on top
         ],
-      ),
-    );
-  }
-
-  /// Helper to build a generic styled container for finalized text information.
-  Widget _buildInfoBox({
-    required String text,
-    required double fontSize,
-    FontWeight? fontWeight,
-    FontStyle? fontStyle,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white70,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          fontStyle: fontStyle,
-        ),
       ),
     );
   }

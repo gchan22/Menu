@@ -146,3 +146,5 @@ the app and reopen with the same data
 finalized_resturant keep the button the same
 
 66. [x] In the sign in screen have an app bar that goes to the finalized_resturant screen
+
+67. [x] For complex widgets in every file turn it into its own file and put it in the widget directory

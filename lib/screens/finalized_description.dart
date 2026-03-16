@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
+import '../widgets/description_display_row.dart';
 import 'finalized_items.dart';
 import '../providers/category_items_provider.dart';
 
@@ -57,26 +58,11 @@ class FinalizedDescriptionScreen extends ConsumerWidget {
             child: Column(
               children: [
                 // Item Name title box
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white70,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    itemName,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                DescriptionDisplayRow(text: itemName, isSample: true),
                 const SizedBox(height: 20),
                 // Optional sample description row
                 if (showSample) ...[
-                  _buildDescriptionDisplayRow('Sample description', isSample: true),
+                  const DescriptionDisplayRow(text: 'Sample description', isSample: true),
                   const SizedBox(height: 10),
                 ],
                 // List of finalized description rows
@@ -85,7 +71,7 @@ class FinalizedDescriptionScreen extends ConsumerWidget {
                     itemCount: descriptionRows.length,
                     separatorBuilder: (context, index) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
-                      return _buildDescriptionDisplayRow(descriptionRows[index]);
+                      return DescriptionDisplayRow(text: descriptionRows[index]);
                     },
                   ),
                 ),
@@ -93,25 +79,6 @@ class FinalizedDescriptionScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Builds a read-only UI row for a single piece of item description.
-  Widget _buildDescriptionDisplayRow(String text, {bool isSample = false}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white70,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: isSample ? 18 : 16,
-        ),
       ),
     );
   }

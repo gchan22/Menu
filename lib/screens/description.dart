@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/description_input_row.dart';
 import 'finalized_description.dart';
 import '../providers/description_provider.dart';
 
@@ -95,7 +96,17 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
                     itemCount: _descriptionControllers.length,
                     separatorBuilder: (context, index) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
-                      return _buildDescriptionInputRow(index);
+                      return DescriptionInputRow(
+                        controller: _descriptionControllers[index],
+                        onChanged: _saveData,
+                        onDelete: () {
+                          setState(() {
+                            _descriptionControllers[index].dispose();
+                            _descriptionControllers.removeAt(index);
+                          });
+                          _saveData();
+                        },
+                      );
                     },
                   ),
                 ),
@@ -138,45 +149,6 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
         onPressed: _addTextBox,
         label: const Text('Add Description'),
         icon: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  /// Builds an individual editable row for description text with a delete button.
-  Widget _buildDescriptionInputRow(int index) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white70,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _descriptionControllers[index],
-              maxLines: null, // Allows the text field to grow vertically
-              onChanged: (_) => _saveData(),
-              decoration: const InputDecoration(
-                hintText: 'Enter description...',
-                border: InputBorder.none,
-              ),
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-          // Button to remove this specific row
-          IconButton(
-            icon: const Icon(Icons.remove_circle, color: Colors.red),
-            onPressed: () {
-              setState(() {
-                _descriptionControllers[index].dispose();
-                _descriptionControllers.removeAt(index);
-              });
-              _saveData();
-            },
-          ),
-        ],
       ),
     );
   }

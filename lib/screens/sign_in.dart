@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
-import 'restaurant.dart';
 import 'create_account.dart';
 import 'success.dart';
 import 'finalized_restaurant.dart';

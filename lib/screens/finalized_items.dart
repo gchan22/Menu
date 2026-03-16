@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/custom_button.dart';
-import 'finalized_description.dart';
+import '../widgets/finalized_item_row.dart';
+import '../widgets/cart_fab.dart';
 import 'finalized_menu.dart';
-import 'cart.dart';
 import '../models/category_item.dart';
 import '../providers/cart_provider.dart';
 import '../providers/menu_provider.dart';
@@ -23,51 +22,8 @@ class FinalizedItemsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
     final menuItems = ref.watch(menuProvider);
     final descriptionRowsMap = ref.watch(descriptionProvider);
-
-    // Shopping cart FAB with badge, same as in editing screen but for finalized view
-    final cartFAB = Stack(
-      children: [
-        FloatingActionButton(
-          heroTag: 'cartFAB_finalized',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CartScreen()),
-            );
-          },
-          backgroundColor: Colors.blueAccent,
-          child: const Icon(Icons.shopping_cart, color: Colors.white),
-        ),
-        if (cartItems.isNotEmpty)
-          Positioned(
-            right: 0,
-            top: 0,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
-              constraints: const BoxConstraints(
-                minWidth: 20,
-                minHeight: 20,
-              ),
-              child: Text(
-                '${cartItems.length}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-      ],
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -100,64 +56,18 @@ class FinalizedItemsScreen extends ConsumerWidget {
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final item = items[index];
-                return _buildItemRow(context, ref, item, descriptionRowsMap);
+                return FinalizedItemRow(
+                  item: item,
+                  category: category,
+                  descriptionRows: descriptionRowsMap[item.name] ?? [],
+                );
               },
             ),
           ),
-          Positioned(
+          const Positioned(
             bottom: 16,
             left: 16,
-            child: cartFAB,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Builds a UI row for a single item in the finalized items list.
-  Widget _buildItemRow(BuildContext context, WidgetRef ref, CategoryItemModel item, Map<String, List<String>> descriptionRowsMap) {
-    final name = item.name;
-    final price = item.price;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white70,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ),
-          Text(price, style: const TextStyle(fontSize: 18, color: Colors.green)),
-          const SizedBox(width: 8),
-          // Customer can still add items to cart from the finalized view
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.blueAccent),
-            onPressed: () {
-              ref.read(cartProvider.notifier).addItem(item);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$name added to cart!'), duration: const Duration(seconds: 1)),
-              );
-            },
-          ),
-          // View detailed item description in finalized mode
-          CustomButton(
-            label: 'More Information',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FinalizedDescriptionScreen(
-                    itemName: name,
-                    descriptionRows: descriptionRowsMap[name] ?? [],
-                    showSample: true,
-                    category: category,
-                  ),
-                ),
-              );
-            },
+            child: CartFAB(heroTag: 'cartFAB_finalized'),
           ),
         ],
       ),

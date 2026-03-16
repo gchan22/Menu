@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
-import 'items.dart';
+import '../widgets/menu_item_row.dart';
 import 'finalized_menu.dart';
 import '../models/menu_item.dart';
 import '../providers/menu_provider.dart';
@@ -11,55 +11,6 @@ import '../providers/menu_provider.dart';
 /// MenuScreen provides an interface to manage food categories (e.g., Chicken, Beef, Soda).
 class MenuScreen extends ConsumerWidget {
   const MenuScreen({super.key});
-
-  /// Displays a dialog allowing the user to change the icon for a menu category.
-  void _pickIcon(BuildContext context, WidgetRef ref, int index, List<MenuItemModel> menuItems) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Choose Icon'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.restaurant),
-                onPressed: () {
-                  final newItem = MenuItemModel(icon: Icons.restaurant, label: menuItems[index].label);
-                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
-                  Navigator.pop(context);
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.local_drink),
-                onPressed: () {
-                  final newItem = MenuItemModel(icon: Icons.local_drink, label: menuItems[index].label);
-                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
-                  Navigator.pop(context);
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.fastfood),
-                onPressed: () {
-                  final newItem = MenuItemModel(icon: Icons.fastfood, label: menuItems[index].label);
-                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
-                  Navigator.pop(context);
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.icecream),
-                onPressed: () {
-                  final newItem = MenuItemModel(icon: Icons.icecream, label: menuItems[index].label);
-                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   /// Displays a dialog to add a new menu category with a name and icon.
   void _addMenuItem(BuildContext context, WidgetRef ref) {
@@ -174,7 +125,7 @@ class MenuScreen extends ConsumerWidget {
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final item = menuItems[index];
-                return _buildMenuItemRow(context, ref, item, index, menuItems);
+                return MenuItemRow(item: item, index: index, allItems: menuItems);
               },
             ),
           ),
@@ -186,65 +137,6 @@ class MenuScreen extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  /// Builds a row representing a single menu category.
-  Widget _buildMenuItemRow(BuildContext context, WidgetRef ref, MenuItemModel item, int index, List<MenuItemModel> menuItems) {
-    return Row(
-      children: [
-        IconButton(
-          icon: Icon(item.icon, size: 30, color: Colors.black87),
-          onPressed: () => _pickIcon(context, ref, index, menuItems),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white70,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    item.label,
-                    style: const TextStyle(fontSize: 18),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomButton(
-                      label: 'Food Items',
-                      onPressed: () {
-                        // Navigate to specific items within this category
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ItemsScreen(category: item.label),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    // Button to remove the category
-                    IconButton(
-                      icon: const Icon(Icons.remove_circle, color: Colors.red),
-                      onPressed: () {
-                        ref.read(menuProvider.notifier).removeMenuItem(item);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
