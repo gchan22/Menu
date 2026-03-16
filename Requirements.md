@@ -43,3 +43,9 @@ Description: This document outlines the requirements for a digital menu creation
 ## 5. Technical Considerations (Implicit)
 *   The application will require a robust backend infrastructure to manage cloud storage and data persistence (e.g., Google Cloud Platform services like Cloud Firestore or Cloud SQL).
 *   The application will need an intuitive frontend to facilitate user interaction and display the digital menu.
+
+## 6. Sign In and Sign Up
+*   The application will allow you to sign in as a current user or create a new account.
+If signing in as a new user allows you create a new account that allows you to create a new menu.
+If you are a current user allows you to continue editing the menu that you left off at or 
+create a new menu.
