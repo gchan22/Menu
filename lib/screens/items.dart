@@ -104,6 +104,27 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
     final nameController = TextEditingController();
     final priceController = TextEditingController();
 
+    String formatPrice(String input) {
+      // Remove non-numeric characters except for the decimal point
+      String cleaned = input.replaceAll(RegExp(r'[^0-9.]'), '');
+      if (cleaned.isEmpty) return input;
+
+      double? value = double.tryParse(cleaned);
+      if (value == null) return input;
+
+      // Format with commas and 2 decimal places
+      String parts = value.toStringAsFixed(2);
+      List<String> split = parts.split('.');
+      String integerPart = split[0];
+      String decimalPart = split[1];
+
+      // Add commas to integer part
+      RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+      String formattedInteger = integerPart.replaceAllMapped(reg, (Match m) => '${m[1]},');
+
+      return '\$$formattedInteger.$decimalPart';
+    }
+
     showDialog(
       context: context,
       builder: (context) {
@@ -132,11 +153,12 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
             TextButton(
               onPressed: () {
                 if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
+                  final formattedPrice = formatPrice(priceController.text);
                   ref.read(categoryItemsProvider.notifier).addCategoryItem(
                     widget.category,
                     CategoryItemModel(
                       name: nameController.text,
-                      price: priceController.text,
+                      price: formattedPrice,
                     ),
                   );
                   Navigator.pop(context);

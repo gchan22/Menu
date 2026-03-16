@@ -36,15 +36,10 @@ class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>
     prefs.setString(_key, jsonEncode(mapToSave));
   }
 
-  /// Initializes a category with default items if it hasn't been set yet.
+  /// Initializes a category with an empty list if it hasn't been set yet.
   void initializeCategory(String category) {
     if (!state.containsKey(category)) {
-      final defaults = [
-        CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
-        CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
-        CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
-      ];
-      state = {...state, category: defaults};
+      state = {...state, category: []};
       _save();
     }
   }

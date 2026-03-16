@@ -60,8 +60,8 @@ final cartProvider = NotifierProvider<CartNotifier, List<CategoryItemModel>>(() 
 final cartTotalProvider = Provider<double>((ref) {
   final cartItems = ref.watch(cartProvider);
   return cartItems.fold(0.0, (previousValue, item) {
-    // Strip dollar sign and parse
-    final rawPrice = item.price.replaceAll('\$', '').trim();
+    // Strip dollar sign, commas, and whitespace then parse
+    final rawPrice = item.price.replaceAll('\$', '').replaceAll(',', '').trim();
     /// checks the characters after . and if null turns it into a valid value
     final price = double.tryParse(rawPrice) ?? 0.0;
     return previousValue + price;

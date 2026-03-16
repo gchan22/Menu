@@ -23,12 +23,7 @@ class MenuNotifier extends Notifier<List<MenuItemModel>> {
     }
 
     // Default categories for the application
-    return [
-      MenuItemModel(icon: Icons.restaurant, label: 'Chicken'),
-      MenuItemModel(icon: Icons.restaurant, label: 'Beef'),
-      MenuItemModel(icon: Icons.restaurant, label: 'Pork'),
-      MenuItemModel(icon: Icons.local_drink, label: 'Soda'),
-    ];
+    return [];
   }
 
   /// Save current state to preferences

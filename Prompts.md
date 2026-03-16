@@ -156,3 +156,8 @@ in success screen go to choice_menu screen.
 
 69. [x] In Cart screen have a new button under total cost row called Clear Cart. 
 The clear cart button should clear all the items from the cart making the cart empty.
+
+70. [x] Remove hard coded data from menu and items screen
+
+71. [x] In item screen have the add new item format the price if just entering a 
+number and have the format include commas, dollar sign, and .00
