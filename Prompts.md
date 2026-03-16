@@ -124,3 +124,17 @@ Have another if account already exist for create account. Initialize firebase in
 58. [x] When create account is successful go to sign in screen otherwise if username 
 and password are the same throw and exception
 
+59. [x] if the format for create account is correct then go to sign in screen
+
+60. [x] Have a visibility button in the textfield for password in both sign in and 
+create account screen that allows showing password and hiding password
+
+61. [x] Create a success screen and have the sign up button go to sucess screen 
+have the success screen have a button called Continue Edit that goes restaurant screen 
+and have another button next to Continue edit button called New Menu that does nothing.
+In create account screen have the Back to sign in as a button that goes to sign in screen.
+
+62. [x] The sign in button in sign in screen go to success screen and revert the sign up button 
+to what it was before
+
+63. [x] In restaurant screen change new menu button to say Sign In instead of new menu

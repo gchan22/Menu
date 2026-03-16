@@ -5,6 +5,7 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'restaurant.dart';
 import 'create_account.dart';
+import 'success.dart';
 import '../providers/service_providers.dart';
 
 /// SignInScreen provides a login interface with validation for username and password.
@@ -20,6 +21,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -86,10 +88,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         await auth.signIn(email: email, password: password);
         
         if (mounted) {
-          // If validation passes, navigate to the restaurant setup screen
+          // If validation passes, navigate to the success screen
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const RestaurantScreen()),
+            MaterialPageRoute(builder: (context) => const SuccessScreen()),
           );
         }
       } catch (e) {
@@ -135,8 +137,19 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   CustomTextField(
                     controller: _passwordController,
                     label: 'Password',
-                    obscureText: true,
+                    obscureText: !_isPasswordVisible,
                     validator: _validatePassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(height: 40),
                   if (_isLoading)

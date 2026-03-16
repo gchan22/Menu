@@ -28,7 +28,7 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
       top: 40,
       left: 16,
       child: CustomButton(
-        label: 'New Menu',
+        label: 'Sign In',
         backgroundColor: const Color.fromARGB(255, 242, 109, 153),
         foregroundColor: Colors.black,
         onPressed: () {

@@ -14,6 +14,8 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   /// A validation function for the input text.
   final String? Function(String?)? validator;
+  /// Optional icon to show at the end of the text field.
+  final Widget? suffixIcon;
 
   const CustomTextField({
     super.key,
@@ -23,6 +25,7 @@ class CustomTextField extends StatelessWidget {
     this.fillColor = Colors.white70,
     this.obscureText = false,
     this.validator,
+    this.suffixIcon,
   });
 
   @override
@@ -36,6 +39,7 @@ class CustomTextField extends StatelessWidget {
         alignLabelWithHint: true,
         filled: filled,
         fillColor: fillColor,
+        suffixIcon: suffixIcon,
       ),
     );
   }

@@ -19,6 +19,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -163,8 +164,19 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                   CustomTextField(
                     controller: _passwordController,
                     label: 'Password',
-                    obscureText: true,
+                    obscureText: !_isPasswordVisible,
                     validator: _validatePassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(height: 40),
                   if (_isLoading)
@@ -175,11 +187,11 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                       onPressed: _handleCreateAccount,
                     ),
                   const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Back to Sign In',
-                      style: TextStyle(color: Colors.white),
+                  CustomButton(
+                    label: 'Back to Sign In',
+                    onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const SignInScreen()),
+                      (route) => false,
                     ),
                   ),
                 ],
