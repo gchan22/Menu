@@ -1,16 +1,26 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'shared_preferences_provider.dart';
+import 'service_providers.dart';
 
 /// Notifier class for managing the descriptions of food items.
 class DescriptionNotifier extends Notifier<Map<String, List<String>>> {
-  static const _key = 'descriptions';
+  static const _baseKey = 'descriptions';
+
+  String _getUserKey() {
+    final user = ref.read(authStateProvider).value;
+    final uid = user?.uid ?? 'guest';
+    return '${uid}_$_baseKey';
+  }
 
   /// load saved preferences
   @override
   Map<String, List<String>> build() {
+    // Watch for authentication state changes
+    ref.watch(authStateProvider);
+
     final prefs = ref.watch(sharedPreferencesProvider);
-    final data = prefs.getString(_key);
+    final data = prefs.getString(_getUserKey());
     if (data != null) {
       try {
         final Map<String, dynamic> jsonMap = jsonDecode(data);
@@ -29,7 +39,7 @@ class DescriptionNotifier extends Notifier<Map<String, List<String>>> {
   /// Save current state to preferences
   void _save() {
     final prefs = ref.read(sharedPreferencesProvider);
-    prefs.setString(_key, jsonEncode(state));
+    prefs.setString(_getUserKey(), jsonEncode(state));
   }
 
   /// Sets or updates the description rows for a specific item.

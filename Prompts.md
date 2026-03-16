@@ -169,3 +169,7 @@ appears that says sample descritption thats been hard coded
 
 74. [x] Have the Yes button in choice_menu screen reset all saved data in
 restaurant, menu, item, and description screen and then go to restaurant screen
+
+75. [x] When signing in save the shared prefence to that specific user that was 
+signed in. Have new users have a no saved preferences. For existing users all for differing
+saved data

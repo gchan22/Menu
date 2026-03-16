@@ -2,16 +2,26 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/category_item.dart';
 import 'shared_preferences_provider.dart';
+import 'service_providers.dart';
 
 /// Notifier class for managing the items belonging to specific categories.
 class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>>> {
-  static const _key = 'category_items';
+  static const _baseKey = 'category_items';
+
+  String _getUserKey() {
+    final user = ref.read(authStateProvider).value;
+    final uid = user?.uid ?? 'guest';
+    return '${uid}_$_baseKey';
+  }
 
   /// loads saved preference
   @override
   Map<String, List<CategoryItemModel>> build() {
+    // Watch for authentication state changes
+    ref.watch(authStateProvider);
+
     final prefs = ref.watch(sharedPreferencesProvider);
-    final data = prefs.getString(_key);
+    final data = prefs.getString(_getUserKey());
     if (data != null) {
       try {
         final Map<String, dynamic> jsonMap = jsonDecode(data);
@@ -33,7 +43,7 @@ class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>
     final mapToSave = state.map((key, value) {
       return MapEntry(key, value.map((e) => e.toMap()).toList());
     });
-    prefs.setString(_key, jsonEncode(mapToSave));
+    prefs.setString(_getUserKey(), jsonEncode(mapToSave));
   }
 
   /// Initializes a category with an empty list if it hasn't been set yet.

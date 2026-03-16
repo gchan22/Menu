@@ -2,16 +2,26 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/category_item.dart';
 import 'shared_preferences_provider.dart';
+import 'service_providers.dart';
 
 /// Notifier class for managing the user's shopping cart.
 class CartNotifier extends Notifier<List<CategoryItemModel>> {
-  static const _key = 'cart_items';
+  static const _baseKey = 'cart_items';
+
+  String _getUserKey() {
+    final user = ref.read(authStateProvider).value;
+    final uid = user?.uid ?? 'guest';
+    return '${uid}_$_baseKey';
+  }
 
   ///Loads saved data from shared preferences.
   @override
   List<CategoryItemModel> build() {
+    // Watch for authentication state changes
+    ref.watch(authStateProvider);
+
     final prefs = ref.watch(sharedPreferencesProvider);
-    final data = prefs.getString(_key);
+    final data = prefs.getString(_getUserKey());
     if (data != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(data);
@@ -28,7 +38,7 @@ class CartNotifier extends Notifier<List<CategoryItemModel>> {
   void _save() {
     final prefs = ref.read(sharedPreferencesProvider);
     final data = jsonEncode(state.map((e) => e.toMap()).toList());
-    prefs.setString(_key, data);
+    prefs.setString(_getUserKey(), data);
   }
 
   /// Adds an item to the shopping cart.
