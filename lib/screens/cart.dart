@@ -74,7 +74,7 @@ class CartScreen extends ConsumerWidget {
                   // Render a row for each item in the cart
                   ...cartItems.map((item) {
                     return _buildCartRow(ref, item);
-                  }).toList(),
+                  }),
                   if (cartItems.isNotEmpty) totalRow,
                   if (cartItems.isEmpty)
                     const Padding(

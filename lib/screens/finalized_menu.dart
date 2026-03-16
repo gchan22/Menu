@@ -5,7 +5,6 @@ import '../widgets/custom_button.dart';
 import 'finalized_items.dart';
 import 'finalized_restaurant.dart';
 import '../models/menu_item.dart';
-import '../models/category_item.dart';
 import '../providers/restaurant_provider.dart';
 import '../providers/menu_provider.dart';
 import '../providers/category_items_provider.dart';

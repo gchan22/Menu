@@ -120,3 +120,7 @@ Create Account next to sign in button.
 
 57. [x] Have a catch error if password and username doesn't work for sign in and create account.
 Have another if account already exist for create account. Initialize firebase in main.
+
+58. [x] When create account is successful go to sign in screen otherwise if username 
+and password are the same throw and exception
+

@@ -20,6 +20,12 @@ class MenuNotifier extends Notifier<List<MenuItemModel>> {
     state = [...state, item];
   }
 
+  /// Updates an existing menu item at a specific index.
+  void updateMenuItem(int index, MenuItemModel newItem) {
+    final newList = List<MenuItemModel>.from(state)..[index] = newItem;
+    state = newList;
+  }
+
   /// Removes a specific category from the menu.
   void removeMenuItem(MenuItemModel item) {
     state = state.where((i) => i != item).toList();

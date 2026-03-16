@@ -26,8 +26,7 @@ class MenuScreen extends ConsumerWidget {
                 icon: const Icon(Icons.restaurant),
                 onPressed: () {
                   final newItem = MenuItemModel(icon: Icons.restaurant, label: menuItems[index].label);
-                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
-                  ref.read(menuProvider.notifier).state = newList;
+                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
                   Navigator.pop(context);
                 },
               ),
@@ -35,8 +34,7 @@ class MenuScreen extends ConsumerWidget {
                 icon: const Icon(Icons.local_drink),
                 onPressed: () {
                   final newItem = MenuItemModel(icon: Icons.local_drink, label: menuItems[index].label);
-                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
-                  ref.read(menuProvider.notifier).state = newList;
+                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
                   Navigator.pop(context);
                 },
               ),
@@ -44,8 +42,7 @@ class MenuScreen extends ConsumerWidget {
                 icon: const Icon(Icons.fastfood),
                 onPressed: () {
                   final newItem = MenuItemModel(icon: Icons.fastfood, label: menuItems[index].label);
-                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
-                  ref.read(menuProvider.notifier).state = newList;
+                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
                   Navigator.pop(context);
                 },
               ),
@@ -53,8 +50,7 @@ class MenuScreen extends ConsumerWidget {
                 icon: const Icon(Icons.icecream),
                 onPressed: () {
                   final newItem = MenuItemModel(icon: Icons.icecream, label: menuItems[index].label);
-                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
-                  ref.read(menuProvider.notifier).state = newList;
+                  ref.read(menuProvider.notifier).updateMenuItem(index, newItem);
                   Navigator.pop(context);
                 },
               ),

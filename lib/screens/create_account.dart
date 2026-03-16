@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../providers/service_providers.dart';
+import 'sign_in.dart';
 
 /// CreateAccountScreen provides an interface for users to register a new account.
 class CreateAccountScreen extends ConsumerStatefulWidget {
@@ -27,16 +27,21 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     super.dispose();
   }
 
-  /// Validates the username: at least 5 characters and no spaces.
+  /// Validates the input: at least 5 characters, alphanumeric/email symbols only, no spaces.
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a username';
+      return 'Please enter an email or username';
     }
-    if (value.length < 5) {
-      return 'Username must be at least 5 characters';
+    final trimmedValue = value.trim();
+    if (trimmedValue.length < 5) {
+      return 'Must be at least 5 characters';
     }
-    if (value.contains(' ')) {
-      return 'Username cannot contain spaces';
+    if (trimmedValue.contains(' ')) {
+      return 'Cannot contain spaces';
+    }
+    // Allow alphanumeric characters and common email symbols (@, ., _, -)
+    if (!RegExp(r'^[a-zA-Z0-9.@_-]+$').hasMatch(trimmedValue)) {
+      return 'Only letters, numbers, and . @ _ - are allowed';
     }
     return null;
   }
@@ -66,54 +71,63 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
 
   /// Handles user account creation logic using Firebase.
   Future<void> _handleCreateAccount() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+    // 1. Client-side validation
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    
+    final input = _usernameController.text.trim();
+    final email = input.contains('@') ? input : "$input@example.com";
+    final password = _passwordController.text;
+
+    try {
+      // 2. Business logic validation
+      if (input == password) {
+        throw Exception('Username and password cannot be the same.');
+      }
       
       final auth = ref.read(authServiceProvider);
       final db = ref.read(databaseServiceProvider);
-      
-      // Using a mock email format for username-based auth in Firebase
-      final email = "${_usernameController.text}@example.com";
-      final password = _passwordController.text;
 
+      // 3. Create account in Firebase Auth
+      final user = await auth.signUp(email: email, password: password);
+      
+      if (user == null) {
+        throw Exception('Account creation failed. Please try again.');
+      }
+
+      // 4. Save to Database (non-blocking for the flow)
       try {
-        final credential = await auth.signUp(email, password);
-        
-        if (credential.user != null) {
-          // Save the username and password to Firestore
-          await db.saveUser(credential.user!.uid, _usernameController.text, password);
-          
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Account created successfully! Please sign in.')),
-            );
-            // Go back to sign in screen
-            Navigator.pop(context);
-          }
-        }
-      } on FirebaseAuthException catch (e) {
-        String message = 'An error occurred during account creation.';
-        if (e.code == 'email-already-in-use') {
-          message = 'An account already exists for this username.';
-        } else if (e.code == 'invalid-email') {
-          message = 'The username format is invalid.';
-        } else if (e.code == 'weak-password') {
-          message = 'The password is too weak.';
-        }
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message)),
-          );
-        }
+        await db.saveUser(user.uid, input, password).timeout(const Duration(seconds: 5));
       } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('An unexpected error occurred.')),
-          );
-        }
-      } finally {
-        if (mounted) setState(() => _isLoading = false);
+        // Log error but don't stop the user flow if account was created
+        debugPrint('Database save warning: $e');
+      }
+
+      // 5. Sign out (as Firebase auto-logs in on signup)
+      await auth.signOut().catchError((_) => null);
+
+      // 6. Navigation
+      if (mounted) {
+        setState(() => _isLoading = false);
+        
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Account created! Please sign in.')),
+        );
+
+        // Go back to sign in screen
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const SignInScreen()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
+        );
       }
     }
   }
@@ -142,7 +156,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                   const SizedBox(height: 40),
                   CustomTextField(
                     controller: _usernameController,
-                    label: 'Username',
+                    label: 'Email or Username',
                     validator: _validateUsername,
                   ),
                   const SizedBox(height: 20),

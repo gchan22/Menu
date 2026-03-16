@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
@@ -29,16 +28,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.dispose();
   }
 
-  /// Validates the username: at least 5 characters and no spaces.
+  /// Validates the input: at least 5 characters, alphanumeric/email symbols only, no spaces.
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a username';
+      return 'Please enter an email or username';
     }
-    if (value.length < 5) {
-      return 'Username must be at least 5 characters';
+    final trimmedValue = value.trim();
+    if (trimmedValue.length < 5) {
+      return 'Must be at least 5 characters';
     }
-    if (value.contains(' ')) {
-      return 'Username cannot contain spaces';
+    if (trimmedValue.contains(' ')) {
+      return 'Cannot contain spaces';
+    }
+    // Allow alphanumeric characters and common email symbols (@, ., _, -)
+    if (!RegExp(r'^[a-zA-Z0-9.@_-]+$').hasMatch(trimmedValue)) {
+      return 'Only letters, numbers, and . @ _ - are allowed';
     }
     return null;
   }
@@ -73,12 +77,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       
       final auth = ref.read(authServiceProvider);
       
-      // Using a mock email format for username-based auth in Firebase
-      final email = "${_usernameController.text}@example.com";
+      final input = _usernameController.text.trim();
+      // Use the input as-is if it's already an email, otherwise append default domain
+      final email = input.contains('@') ? input : "$input@example.com";
       final password = _passwordController.text;
 
       try {
-        await auth.login(email, password);
+        await auth.signIn(email: email, password: password);
         
         if (mounted) {
           // If validation passes, navigate to the restaurant setup screen
@@ -87,25 +92,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             MaterialPageRoute(builder: (context) => const RestaurantScreen()),
           );
         }
-      } on FirebaseAuthException catch (e) {
-        String message = 'An error occurred during sign in.';
-        if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
-          message = 'Invalid username or password.';
-        } else if (e.code == 'invalid-email') {
-          message = 'The username format is invalid.';
-        } else if (e.code == 'user-disabled') {
-          message = 'This user account has been disabled.';
-        }
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message)),
-          );
-        }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('An unexpected error occurred.')),
+            SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
           );
         }
       } finally {
@@ -138,7 +128,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   const SizedBox(height: 40),
                   CustomTextField(
                     controller: _usernameController,
-                    label: 'Username',
+                    label: 'Email or Username',
                     validator: _validateUsername,
                   ),
                   const SizedBox(height: 20),

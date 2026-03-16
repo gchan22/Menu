@@ -13,7 +13,7 @@ class DatabaseService {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Database error saving user: $e');
+      throw Exception('Failed to save user data to database: $e');
     }
   }
 
