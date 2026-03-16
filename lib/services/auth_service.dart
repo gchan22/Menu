@@ -1,13 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
+/// AuthService handles Firebase authentication logic.
 class AuthService {
-  // Mock authentication logic
-  Future<bool> login(String email, String password) async {
-    // Simulate backend call
-    await Future.delayed(const Duration(seconds: 1));
-    return email == 'admin' && password == 'admin';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  /// Logs in a user using email and password.
+  /// Throws FirebaseAuthException for specific error handling.
+  Future<UserCredential> login(String email, String password) async {
+    return await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 
+  /// Creates a new user with email and password.
+  /// Throws FirebaseAuthException for specific error handling.
+  Future<UserCredential> signUp(String email, String password) async {
+    return await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  /// Logs out the current user.
   Future<void> logout() async {
-    // Simulate logout
-    await Future.delayed(const Duration(milliseconds: 500));
+    await _auth.signOut();
   }
 }

@@ -113,5 +113,10 @@ connects services to UI.
 54. [x] Change the exit button on resturant, menu, items, and description to say 
 Exit Editing and change Menu button on resturant screen to say Edit Menu
 
-55. [x] Creat a new file in screen called sign in. Have the new menu button go to sign in screen. Have sign in screen have a textfield for user name requiring at least 5 characters and have another textfield for password requiring at least 8 characters and a special character, a lowercase, a uppercase, and a number. Have a sign in button under that and a 
+55. [x] Create a new file in screen called sign in. Have the new menu button go to sign in screen. Have sign in screen have a textfield for user name requiring at least 5 characters and have another textfield for password requiring at least 8 characters and a special character, a lowercase, a uppercase, and a number. Have a sign in button under that and a 
 Create Account next to sign in button.
+
+56. [x] Create a new file in screen called Create Account. Have the create account button in sign in screen go to create account screen. Have create account screen have a text field that has a  user name requiring at least 5 characters and have another textfield for password requiring at least 8 characters and a special character, a lowercase, a uppercase, and a number. Under that have a create account button and save the user to firebase and go back to sign in screen.
+
+57. [x] Have a catch error if password and username doesn't work for sign in and create account.
+Have another if account already exist for create account. Initialize firebase in main.

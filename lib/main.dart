@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'screens/restaurant.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'screens/sign_in.dart';
 
 /// The entry point of the application.
-void main() {
+void main() async {
+  // Ensure that Flutter's binding is initialized before Firebase
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase with default options for the current platform
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     // ProviderScope stores the state of all providers in the application
     const ProviderScope(
@@ -25,8 +35,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // The application starts at the Restaurant setup screen
-      home: const RestaurantScreen(),
+      // The application starts at the Sign In screen
+      home: const SignInScreen(),
     );
   }
 }

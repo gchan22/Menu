@@ -4,19 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
-import 'restaurant.dart';
-import 'create_account.dart';
 import '../providers/service_providers.dart';
 
-/// SignInScreen provides a login interface with validation for username and password.
-class SignInScreen extends ConsumerStatefulWidget {
-  const SignInScreen({super.key});
+/// CreateAccountScreen provides an interface for users to register a new account.
+class CreateAccountScreen extends ConsumerStatefulWidget {
+  const CreateAccountScreen({super.key});
 
   @override
-  ConsumerState<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
-class _SignInScreenState extends ConsumerState<SignInScreen> {
+class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -66,35 +64,41 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     return null;
   }
 
-  /// Handles user login logic using Firebase.
-  Future<void> _handleSignIn() async {
+  /// Handles user account creation logic using Firebase.
+  Future<void> _handleCreateAccount() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       
       final auth = ref.read(authServiceProvider);
+      final db = ref.read(databaseServiceProvider);
       
       // Using a mock email format for username-based auth in Firebase
       final email = "${_usernameController.text}@example.com";
       final password = _passwordController.text;
 
       try {
-        await auth.login(email, password);
+        final credential = await auth.signUp(email, password);
         
-        if (mounted) {
-          // If validation passes, navigate to the restaurant setup screen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const RestaurantScreen()),
-          );
+        if (credential.user != null) {
+          // Save the username and password to Firestore
+          await db.saveUser(credential.user!.uid, _usernameController.text, password);
+          
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Account created successfully! Please sign in.')),
+            );
+            // Go back to sign in screen
+            Navigator.pop(context);
+          }
         }
       } on FirebaseAuthException catch (e) {
-        String message = 'An error occurred during sign in.';
-        if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
-          message = 'Invalid username or password.';
+        String message = 'An error occurred during account creation.';
+        if (e.code == 'email-already-in-use') {
+          message = 'An account already exists for this username.';
         } else if (e.code == 'invalid-email') {
           message = 'The username format is invalid.';
-        } else if (e.code == 'user-disabled') {
-          message = 'This user account has been disabled.';
+        } else if (e.code == 'weak-password') {
+          message = 'The password is too weak.';
         }
         
         if (mounted) {
@@ -128,7 +132,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Sign In',
+                    'Create Account',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -152,26 +156,18 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   if (_isLoading)
                     const CircularProgressIndicator(color: Colors.white)
                   else
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomButton(
-                          label: 'Sign In',
-                          onPressed: _handleSignIn,
-                        ),
-                        const SizedBox(width: 20),
-                        CustomButton(
-                          label: 'Create Account',
-                          onPressed: () {
-                            // Navigate to the create account screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const CreateAccountScreen()),
-                            );
-                          },
-                        ),
-                      ],
+                    CustomButton(
+                      label: 'Create Account',
+                      onPressed: _handleCreateAccount,
                     ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Back to Sign In',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ],
               ),
             ),
