@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_menu.dart';
-import 'restaurant.dart';
+import 'sign_in.dart';
 import '../providers/restaurant_provider.dart';
 import '../providers/menu_provider.dart';
 
@@ -32,10 +32,10 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
         backgroundColor: const Color.fromARGB(255, 242, 109, 153),
         foregroundColor: Colors.black,
         onPressed: () {
-          // Clears navigation stack and goes back to the initial restaurant setup
+          // Clears navigation stack and goes to the sign in screen
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const RestaurantScreen()),
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
             (route) => false,
           );
         },

@@ -112,3 +112,6 @@ connects services to UI.
 
 54. [x] Change the exit button on resturant, menu, items, and description to say 
 Exit Editing and change Menu button on resturant screen to say Edit Menu
+
+55. [x] Creat a new file in screen called sign in. Have the new menu button go to sign in screen. Have sign in screen have a textfield for user name requiring at least 5 characters and have another textfield for password requiring at least 8 characters and a special character, a lowercase, a uppercase, and a number. Have a sign in button under that and a 
+Create Account next to sign in button.

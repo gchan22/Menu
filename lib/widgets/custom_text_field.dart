@@ -10,6 +10,10 @@ class CustomTextField extends StatelessWidget {
   final bool filled;
   /// The color used to fill the background.
   final Color? fillColor;
+  /// Whether to hide the text being entered (e.g., for passwords).
+  final bool obscureText;
+  /// A validation function for the input text.
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
@@ -17,12 +21,16 @@ class CustomTextField extends StatelessWidget {
     required this.label,
     this.filled = true,
     this.fillColor = Colors.white70,
+    this.obscureText = false,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      obscureText: obscureText,
+      validator: validator,
       decoration: InputDecoration(
         labelText: label,
         alignLabelWithHint: true,
