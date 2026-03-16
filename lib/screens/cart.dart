@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/cart_item_row.dart';
+import '../widgets/custom_button.dart';
 import '../models/category_item.dart';
 import '../providers/cart_provider.dart';
 
@@ -76,7 +77,16 @@ class CartScreen extends ConsumerWidget {
                   ...cartItems.map((item) {
                     return CartItemRow(item: item);
                   }),
-                  if (cartItems.isNotEmpty) totalRow,
+                  if (cartItems.isNotEmpty) ...[
+                    totalRow,
+                    const SizedBox(height: 20),
+                    CustomButton(
+                      label: 'Clear Cart',
+                      onPressed: () {
+                        ref.read(cartProvider.notifier).clear();
+                      },
+                    ),
+                  ],
                   if (cartItems.isEmpty)
                     const Padding(
                       padding: EdgeInsets.only(top: 40),

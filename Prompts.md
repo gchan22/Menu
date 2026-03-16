@@ -154,5 +154,5 @@ Are you sure you want to create a new menu. Have a button that says Yes that doe
 another next to it that says No that goes back to sucess screen. Have the new menu button 
 in success screen go to choice_menu screen.
 
-69. [ ] In Cart screen have a new button under total cost row called Clear Cart. 
+69. [x] In Cart screen have a new button under total cost row called Clear Cart. 
 The clear cart button should clear all the items from the cart making the cart empty.
