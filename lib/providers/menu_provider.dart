@@ -51,6 +51,12 @@ class MenuNotifier extends Notifier<List<MenuItemModel>> {
     state = state.where((i) => i != item).toList();
     _save();
   }
+
+  /// Resets the menu items list to its initial empty state.
+  void reset() {
+    state = [];
+    _save();
+  }
 }
 
 /// Provider for managing the list of top-level menu categories.

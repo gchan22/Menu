@@ -54,6 +54,12 @@ class DescriptionNotifier extends Notifier<Map<String, List<String>>> {
     };
     _save();
   }
+
+  /// Resets the descriptions mapping to its initial empty state.
+  void reset() {
+    state = {};
+    _save();
+  }
 }
 
 /// Provider to manage and access the list of description lines for each food item.

@@ -66,6 +66,12 @@ class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>
     };
     _save();
   }
+
+  /// Resets the category items mapping to its initial empty state.
+  void reset() {
+    state = {};
+    _save();
+  }
 }
 
 /// Provider to manage the mapping of category names to their respective food items.

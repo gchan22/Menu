@@ -35,6 +35,12 @@ class RestaurantInfoNotifier extends Notifier<RestaurantInfoModel> {
     state = RestaurantInfoModel(name: name, slogan: slogan);
     _save();
   }
+
+  /// Resets the restaurant information to its initial empty state.
+  void reset() {
+    state = RestaurantInfoModel(name: '', slogan: '');
+    _save();
+  }
 }
 
 /// Provider to access and manage restaurant information across the application.

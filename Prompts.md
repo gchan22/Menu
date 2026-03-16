@@ -166,3 +166,6 @@ number and have the format include commas, dollar sign, and .00
 appears that says sample descritption thats been hard coded
 
 73. [x] In cart screen have the total cost row also have commas 
+
+74. [x] Have the Yes button in choice_menu screen reset all saved data in
+restaurant, menu, item, and description screen and then go to restaurant screen
