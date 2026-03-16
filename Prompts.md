@@ -161,3 +161,6 @@ The clear cart button should clear all the items from the cart making the cart e
 
 71. [x] In item screen have the add new item format the price if just entering a 
 number and have the format include commas, dollar sign, and .00
+
+72. [x] When going from finalized_item to finalized_description remove textbox that
+appears that says sample descritption thats been hard coded

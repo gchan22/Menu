@@ -16,7 +16,7 @@ class FinalizedDescriptionScreen extends ConsumerWidget {
     super.key,
     required this.itemName,
     required this.descriptionRows,
-    this.showSample = true,
+    this.showSample = false,
     this.category,
   });
 
@@ -61,11 +61,6 @@ class FinalizedDescriptionScreen extends ConsumerWidget {
                 // Item Name title box
                 DescriptionDisplayRow(text: itemName, isSample: true),
                 const SizedBox(height: 20),
-                // Optional sample description row
-                if (showSample) ...[
-                  const DescriptionDisplayRow(text: 'Sample description', isSample: true),
-                  const SizedBox(height: 10),
-                ],
                 // List of finalized description rows
                 Expanded(
                   child: ListView.separated(
