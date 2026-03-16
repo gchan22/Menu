@@ -10,6 +10,7 @@ class MenuItemModel {
   MenuItemModel({required this.icon, required this.label});
 
   /// Converts the model into a map for storage or transmission.
+  /// returns a map assigning icon, label
   Map<String, dynamic> toMap() => {
         'iconCodePoint': icon.codePoint,
         'iconFontFamily': icon.fontFamily,
@@ -17,6 +18,7 @@ class MenuItemModel {
       };
 
   /// Creates a model instance from a map.
+  /// Packages the object to save data after closing app
   factory MenuItemModel.fromMap(Map<String, dynamic> map) => MenuItemModel(
         icon: IconData(map['iconCodePoint'] as int, fontFamily: map['iconFontFamily'] as String?),
         label: map['label'] as String,

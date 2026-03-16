@@ -6,6 +6,7 @@ import 'shared_preferences_provider.dart';
 class DescriptionNotifier extends Notifier<Map<String, List<String>>> {
   static const _key = 'descriptions';
 
+  /// load saved preferences
   @override
   Map<String, List<String>> build() {
     final prefs = ref.watch(sharedPreferencesProvider);
@@ -25,6 +26,7 @@ class DescriptionNotifier extends Notifier<Map<String, List<String>>> {
     return {};
   }
 
+  /// Save current state to preferences
   void _save() {
     final prefs = ref.read(sharedPreferencesProvider);
     prefs.setString(_key, jsonEncode(state));

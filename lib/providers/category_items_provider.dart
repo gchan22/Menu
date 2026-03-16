@@ -7,6 +7,7 @@ import 'shared_preferences_provider.dart';
 class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>>> {
   static const _key = 'category_items';
 
+  /// loads saved preference
   @override
   Map<String, List<CategoryItemModel>> build() {
     final prefs = ref.watch(sharedPreferencesProvider);
@@ -26,6 +27,7 @@ class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>
     return {};
   }
 
+  /// Saves the current state of the category items to shared preferences.
   void _save() {
     final prefs = ref.read(sharedPreferencesProvider);
     final mapToSave = state.map((key, value) {

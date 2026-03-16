@@ -55,6 +55,7 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
       ),
     );
 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.category} Items'),

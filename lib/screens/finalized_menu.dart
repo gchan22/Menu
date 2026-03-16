@@ -13,6 +13,7 @@ class FinalizedMenuScreen extends ConsumerWidget {
 
   const FinalizedMenuScreen({super.key, required this.menuItems});
 
+  /// The screen layout
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final info = ref.watch(restaurantInfoProvider);

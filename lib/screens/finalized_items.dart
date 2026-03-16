@@ -20,6 +20,7 @@ class FinalizedItemsScreen extends ConsumerWidget {
     required this.items,
   });
 
+  /// The screen layout
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final menuItems = ref.watch(menuProvider);

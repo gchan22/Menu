@@ -7,6 +7,7 @@ import 'shared_preferences_provider.dart';
 class CartNotifier extends Notifier<List<CategoryItemModel>> {
   static const _key = 'cart_items';
 
+  ///Loads saved data from shared preferences.
   @override
   List<CategoryItemModel> build() {
     final prefs = ref.watch(sharedPreferencesProvider);
@@ -23,6 +24,7 @@ class CartNotifier extends Notifier<List<CategoryItemModel>> {
     return [];
   }
 
+  /// Saves the current state of the shopping cart to shared preferences.
   void _save() {
     final prefs = ref.read(sharedPreferencesProvider);
     final data = jsonEncode(state.map((e) => e.toMap()).toList());
@@ -31,6 +33,7 @@ class CartNotifier extends Notifier<List<CategoryItemModel>> {
 
   /// Adds an item to the shopping cart.
   void addItem(CategoryItemModel item) {
+    /// spread operator to add item to existing list of shared preference
     state = [...state, item];
     _save();
   }
@@ -59,6 +62,7 @@ final cartTotalProvider = Provider<double>((ref) {
   return cartItems.fold(0.0, (previousValue, item) {
     // Strip dollar sign and parse
     final rawPrice = item.price.replaceAll('\$', '').trim();
+    /// checks the characters after . and if null turns it into a valid value
     final price = double.tryParse(rawPrice) ?? 0.0;
     return previousValue + price;
   });

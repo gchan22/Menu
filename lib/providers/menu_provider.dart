@@ -8,6 +8,7 @@ import 'shared_preferences_provider.dart';
 class MenuNotifier extends Notifier<List<MenuItemModel>> {
   static const _key = 'menu_items';
 
+  /// load saved preferences
   @override
   List<MenuItemModel> build() {
     final prefs = ref.watch(sharedPreferencesProvider);
@@ -30,6 +31,7 @@ class MenuNotifier extends Notifier<List<MenuItemModel>> {
     ];
   }
 
+  /// Save current state to preferences
   void _save() {
     final prefs = ref.read(sharedPreferencesProvider);
     final data = jsonEncode(state.map((e) => e.toMap()).toList());

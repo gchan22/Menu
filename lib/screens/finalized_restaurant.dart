@@ -19,6 +19,7 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
     required this.slogan,
   });
 
+  /// The screen layout
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final info = ref.watch(restaurantInfoProvider);

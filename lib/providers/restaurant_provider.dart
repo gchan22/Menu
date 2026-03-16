@@ -7,6 +7,7 @@ import 'shared_preferences_provider.dart';
 class RestaurantInfoNotifier extends Notifier<RestaurantInfoModel> {
   static const _key = 'restaurant_info';
 
+  /// load saved preferences
   @override
   RestaurantInfoModel build() {
     final prefs = ref.watch(sharedPreferencesProvider);
@@ -23,6 +24,7 @@ class RestaurantInfoNotifier extends Notifier<RestaurantInfoModel> {
     return RestaurantInfoModel(name: '', slogan: '');
   }
 
+  /// Save current state to preferences
   void _save() {
     final prefs = ref.read(sharedPreferencesProvider);
     prefs.setString(_key, jsonEncode(state.toMap()));

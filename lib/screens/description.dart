@@ -64,6 +64,7 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
     _saveData();
   }
 
+  /// The screen layout
   @override
   Widget build(BuildContext context) {
     return Scaffold(

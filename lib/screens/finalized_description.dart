@@ -20,6 +20,7 @@ class FinalizedDescriptionScreen extends ConsumerWidget {
     this.category,
   });
 
+  /// The screen layout
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(

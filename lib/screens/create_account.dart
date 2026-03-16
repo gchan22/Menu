@@ -21,6 +21,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   bool _isLoading = false;
   bool _isPasswordVisible = false;
 
+  /// if user leaves screen delete characters in textboxes
   @override
   void dispose() {
     _usernameController.dispose();
@@ -98,6 +99,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
       }
 
       // 4. Save to Database (non-blocking for the flow)
+      /// if take to long then timeout
       try {
         await db.saveUser(user.uid, input, password).timeout(const Duration(seconds: 5));
       } catch (e) {
@@ -123,7 +125,9 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
           (route) => false,
         );
       }
-    } catch (e) {
+    } 
+    ///cates errors like same username and password and throws a message
+    catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -133,6 +137,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     }
   }
 
+  ///The screen layout
   @override
   Widget build(BuildContext context) {
     return Scaffold(
