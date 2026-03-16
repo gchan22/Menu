@@ -36,8 +36,8 @@ class ItemRow extends ConsumerWidget {
           Text(price, style: const TextStyle(fontSize: 18, color: Colors.green)),
           const SizedBox(width: 8),
           // Add to cart button
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.blueAccent),
+          CustomButton(
+            label: '+ Add to Cart',
             onPressed: () {
               ref.read(cartProvider.notifier).addItem(item);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -45,6 +45,7 @@ class ItemRow extends ConsumerWidget {
               );
             },
           ),
+          const SizedBox(width: 8),
           // Button to view/edit item descriptions
           CustomButton(
             label: 'More Information',

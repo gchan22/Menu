@@ -173,3 +173,11 @@ restaurant, menu, item, and description screen and then go to restaurant screen
 75. [x] When signing in save the shared prefence to that specific user that was 
 signed in. Have new users have a no saved preferences. For existing users all for differing
 saved data
+
+76. [x] In menu screen have the + button say instead + New Category
+
+77. [x] Have the + in the row of items in items screen and finalized_item screen
+ say instead + Add to Cart
+
+78. [x] Have the + button on bottom right of screen that adds a new item row in
+item screen say instead + Add New Item

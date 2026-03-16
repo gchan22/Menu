@@ -37,8 +37,8 @@ class FinalizedItemRow extends ConsumerWidget {
           Text(price, style: const TextStyle(fontSize: 18, color: Colors.green)),
           const SizedBox(width: 8),
           // Customer can still add items to cart from the finalized view
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.blueAccent),
+          CustomButton(
+            label: '+ Add to Cart',
             onPressed: () {
               ref.read(cartProvider.notifier).addItem(item);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -46,6 +46,7 @@ class FinalizedItemRow extends ConsumerWidget {
               );
             },
           ),
+          const SizedBox(width: 8),
           // View detailed item description in finalized mode
           CustomButton(
             label: 'More Information',

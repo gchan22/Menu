@@ -111,10 +111,11 @@ class MenuScreen extends ConsumerWidget {
         elevation: 0,
       ),
       extendBodyBehindAppBar: true,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addMenuItem(context, ref),
         backgroundColor: Colors.white70,
-        child: const Icon(Icons.add, color: Colors.black),
+        icon: const Icon(Icons.add, color: Colors.black),
+        label: const Text('New Category', style: TextStyle(color: Colors.black)),
       ),
       body: Stack(
         children: [

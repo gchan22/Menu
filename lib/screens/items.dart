@@ -90,11 +90,12 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           _showAddItemDialog(context, ref);
         },
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Add New Item'),
       ),
     );
   }
