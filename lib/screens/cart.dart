@@ -30,6 +30,18 @@ class CartScreen extends ConsumerWidget {
       ),
     );
 
+    String formatTotal(double value) {
+      String parts = value.toStringAsFixed(2);
+      List<String> split = parts.split('.');
+      String integerPart = split[0];
+      String decimalPart = split[1];
+
+      RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+      String formattedInteger = integerPart.replaceAllMapped(reg, (Match m) => '${m[1]},');
+
+      return '\$$formattedInteger.$decimalPart';
+    }
+
     // Total cost row displayed at the bottom of the list
     final totalRow = Container(
       margin: const EdgeInsets.only(top: 20),
@@ -49,7 +61,7 @@ class CartScreen extends ConsumerWidget {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Text(
-            '\$${totalCost.toStringAsFixed(2)}',
+            formatTotal(totalCost),
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
           ),
         ],

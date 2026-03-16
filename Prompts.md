@@ -164,3 +164,5 @@ number and have the format include commas, dollar sign, and .00
 
 72. [x] When going from finalized_item to finalized_description remove textbox that
 appears that says sample descritption thats been hard coded
+
+73. [x] In cart screen have the total cost row also have commas 
