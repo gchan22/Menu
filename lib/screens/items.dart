@@ -84,7 +84,7 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
     // Button to exit editing and view the finalized items list
     final exitButton = Center(
       child: CustomButton(
-        label: 'Exit',
+        label: 'Exit Editing',
         onPressed: () {
           Navigator.push(
             context,

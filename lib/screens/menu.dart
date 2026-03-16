@@ -144,7 +144,7 @@ class MenuScreen extends ConsumerWidget {
     // Navigation button to the finalized menu view
     final exitButton = Center(
       child: CustomButton(
-        label: 'Exit',
+        label: 'Exit Editing',
         onPressed: () {
           Navigator.push(
             context,

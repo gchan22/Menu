@@ -66,7 +66,7 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomButton(
-          label: 'Exit',
+          label: 'Exit Editing',
           onPressed: () {
             _saveData();
             // Navigate to the finalized preview screen
@@ -83,7 +83,7 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
         ),
         const SizedBox(width: 20),
         CustomButton(
-          label: 'Menu',
+          label: 'Edit Menu',
           onPressed: () {
             _saveData();
             // Navigate to the menu editing screen

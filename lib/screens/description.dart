@@ -109,7 +109,7 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
             right: 0,
             child: Center(
               child: CustomButton(
-                label: 'Exit',
+                label: 'Exit Editing',
                 onPressed: () {
                   _saveData();
                   // Navigate to the finalized preview of the item description

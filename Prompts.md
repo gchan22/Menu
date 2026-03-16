@@ -109,3 +109,6 @@ cost of all items in the cart as well as show the cost of each item in cart on e
 53. [x] Use Riverpod to handle all internal app state and data flow. Have providers 
 directory contain Riverpod providers containing the business logic that
 connects services to UI.
+
+54. [x] Change the exit button on resturant, menu, items, and description to say 
+Exit Editing and change Menu button on resturant screen to say Edit Menu
