@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'restaurant.dart';
+import 'choice_menu.dart';
 
 /// SuccessScreen is displayed after a successful account creation.
 class SuccessScreen extends StatelessWidget {
@@ -50,7 +51,10 @@ class SuccessScreen extends StatelessWidget {
                     CustomButton(
                       label: 'New Menu',
                       onPressed: () {
-                        // This button currently does nothing as per prompt 61
+                        // Navigate to choice_menu screen
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => const ChoiceMenuScreen()),
+                        );
                       },
                     ),
                   ],
