@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/restaurant.dart';
 
 /// The entry point of the application.
 void main() {
-  runApp(const MyApp());
+  runApp(
+    // ProviderScope stores the state of all providers in the application
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 /// MyApp sets up the root Material application, including themes and the initial screen.

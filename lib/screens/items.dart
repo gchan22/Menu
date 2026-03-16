@@ -1,71 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'description.dart';
 import 'cart.dart';
 import 'finalized_items.dart';
-import '../models/cart_state.dart';
 import '../models/category_item.dart';
+import '../providers/cart_provider.dart';
+import '../providers/category_items_provider.dart';
 
 /// ItemsScreen displays and manages a list of food items within a specific category.
-class ItemsScreen extends StatefulWidget {
+class ItemsScreen extends ConsumerStatefulWidget {
   final String category;
 
   const ItemsScreen({super.key, required this.category});
 
   @override
-  State<ItemsScreen> createState() => _ItemsScreenState();
+  ConsumerState<ItemsScreen> createState() => _ItemsScreenState();
 }
 
-class _ItemsScreenState extends State<ItemsScreen> {
-  late List<CategoryItemModel> _items;
-
+class _ItemsScreenState extends ConsumerState<ItemsScreen> {
   @override
   void initState() {
     super.initState();
-    // Load items for this category from global state, or provide samples if empty
-    final storedItems = CartState.itemsByCategory[widget.category];
-    if (storedItems != null) {
-      _items = List.from(storedItems);
-    } else {
-      _items = [
-        CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
-        CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
-        CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
-      ];
-      // Save these samples back to CartState immediately so they persist
-      CartState.updateCategoryItems(widget.category, _items);
-    }
-  }
-
-  /// Saves the current list of items for this category to the global state.
-  void _saveData() {
-    CartState.updateCategoryItems(widget.category, _items);
+    // Initialize category with defaults if it doesn't exist yet
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(categoryItemsProvider.notifier).initializeCategory(widget.category);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listen to changes in items for this specific category
+    final itemsMap = ref.watch(categoryItemsProvider);
+    final currentItems = itemsMap[widget.category] ?? [];
+    
+    final cartItems = ref.watch(cartProvider);
+
     // Floating action button for the shopping cart with a badge showing item count
     final cartFAB = Stack(
       children: [
         FloatingActionButton(
           heroTag: 'cartFAB',
           onPressed: () {
-            _saveData();
             // Navigate to the shopping cart screen
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CartScreen()),
-            ).then((_) {
-              // Refresh count when returning from cart
-              setState(() {});
-            });
+            );
           },
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.shopping_cart, color: Colors.white),
         ),
-        if (CartState.items.isNotEmpty)
+        if (cartItems.isNotEmpty)
           Positioned(
             right: 0,
             top: 0,
@@ -80,7 +68,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                 minHeight: 20,
               ),
               child: Text(
-                '${CartState.items.length}',
+                '${cartItems.length}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
@@ -98,13 +86,12 @@ class _ItemsScreenState extends State<ItemsScreen> {
       child: CustomButton(
         label: 'Exit',
         onPressed: () {
-          _saveData();
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => FinalizedItemsScreen(
                 category: widget.category,
-                items: _items,
+                items: currentItems,
               ),
             ),
           );
@@ -125,11 +112,11 @@ class _ItemsScreenState extends State<ItemsScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 80.0),
             child: ListView.separated(
-              itemCount: _items.length,
+              itemCount: currentItems.length,
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                final item = _items[index];
-                return _buildItemRow(item, index);
+                final item = currentItems[index];
+                return _buildItemRow(context, ref, item, index);
               },
             ),
           ),
@@ -148,7 +135,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showAddItemDialog();
+          _showAddItemDialog(context, ref);
         },
         child: const Icon(Icons.add),
       ),
@@ -156,7 +143,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
   }
 
   /// Displays a dialog to add a new food item with a name and price.
-  void _showAddItemDialog() {
+  void _showAddItemDialog(BuildContext context, WidgetRef ref) {
     final nameController = TextEditingController();
     final priceController = TextEditingController();
 
@@ -188,13 +175,13 @@ class _ItemsScreenState extends State<ItemsScreen> {
             TextButton(
               onPressed: () {
                 if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
-                  setState(() {
-                    _items.add(CategoryItemModel(
+                  ref.read(categoryItemsProvider.notifier).addCategoryItem(
+                    widget.category,
+                    CategoryItemModel(
                       name: nameController.text,
                       price: priceController.text,
-                    ));
-                  });
-                  _saveData();
+                    ),
+                  );
                   Navigator.pop(context);
                 }
               },
@@ -207,7 +194,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
   }
 
   /// Builds a UI row for an individual food item.
-  Widget _buildItemRow(CategoryItemModel item, int index) {
+  Widget _buildItemRow(BuildContext context, WidgetRef ref, CategoryItemModel item, int index) {
     final name = item.name;
     final price = item.price;
 
@@ -228,9 +215,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
           IconButton(
             icon: const Icon(Icons.add, color: Colors.blueAccent),
             onPressed: () {
-              setState(() {
-                CartState.addItem(item);
-              });
+              ref.read(cartProvider.notifier).addItem(item);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('$name added to cart!'), duration: const Duration(seconds: 1)),
               );
@@ -240,7 +225,6 @@ class _ItemsScreenState extends State<ItemsScreen> {
           CustomButton(
             label: 'More Information',
             onPressed: () {
-              _saveData();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -256,10 +240,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
           IconButton(
             icon: const Icon(Icons.remove_circle, color: Colors.red),
             onPressed: () {
-              setState(() {
-                _items.removeAt(index);
-              });
-              _saveData();
+              ref.read(categoryItemsProvider.notifier).removeCategoryItem(widget.category, item);
             },
           ),
         ],

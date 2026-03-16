@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import 'finalized_items.dart';
-import '../models/cart_state.dart';
+import '../providers/category_items_provider.dart';
 
 /// FinalizedDescriptionScreen displays a read-only view of all description rows for a food item.
-class FinalizedDescriptionScreen extends StatelessWidget {
+class FinalizedDescriptionScreen extends ConsumerWidget {
   final String itemName;
   final List<String> descriptionRows;
   final bool showSample;
@@ -19,7 +20,7 @@ class FinalizedDescriptionScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Description', style: TextStyle(color: Colors.white)),
@@ -30,12 +31,14 @@ class FinalizedDescriptionScreen extends StatelessWidget {
           onPressed: () {
             // Explicit navigation back to the correct category item list
             if (category != null) {
+              ref.read(categoryItemsProvider.notifier).initializeCategory(category!);
+              final items = ref.read(categoryItemsProvider)[category!] ?? [];
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => FinalizedItemsScreen(
                     category: category!,
-                    items: CartState.itemsByCategory[category] ?? [],
+                    items: items,
                   ),
                 ),
               );

@@ -1,37 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'items.dart';
 import 'finalized_menu.dart';
-import '../models/cart_state.dart';
 import '../models/menu_item.dart';
+import '../providers/menu_provider.dart';
 
 /// MenuScreen provides an interface to manage food categories (e.g., Chicken, Beef, Soda).
-class MenuScreen extends StatefulWidget {
+class MenuScreen extends ConsumerWidget {
   const MenuScreen({super.key});
 
-  @override
-  State<MenuScreen> createState() => _MenuScreenState();
-}
-
-class _MenuScreenState extends State<MenuScreen> {
-  late List<MenuItemModel> _menuItems;
-
-  @override
-  void initState() {
-    super.initState();
-    // Load menu categories from global state
-    _menuItems = List.from(CartState.menuItems);
-  }
-
-  /// Syncs local menu changes to the global CartState.
-  void _saveData() {
-    CartState.updateMenuItems(_menuItems);
-  }
-
   /// Displays a dialog allowing the user to change the icon for a menu category.
-  void _pickIcon(int index) {
+  void _pickIcon(BuildContext context, WidgetRef ref, int index, List<MenuItemModel> menuItems) {
     showDialog(
       context: context,
       builder: (context) {
@@ -43,32 +25,36 @@ class _MenuScreenState extends State<MenuScreen> {
               IconButton(
                 icon: const Icon(Icons.restaurant),
                 onPressed: () {
-                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.restaurant, label: _menuItems[index].label));
-                  _saveData();
+                  final newItem = MenuItemModel(icon: Icons.restaurant, label: menuItems[index].label);
+                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
+                  ref.read(menuProvider.notifier).state = newList;
                   Navigator.pop(context);
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.local_drink),
                 onPressed: () {
-                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.local_drink, label: _menuItems[index].label));
-                  _saveData();
+                  final newItem = MenuItemModel(icon: Icons.local_drink, label: menuItems[index].label);
+                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
+                  ref.read(menuProvider.notifier).state = newList;
                   Navigator.pop(context);
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.fastfood),
                 onPressed: () {
-                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.fastfood, label: _menuItems[index].label));
-                  _saveData();
+                  final newItem = MenuItemModel(icon: Icons.fastfood, label: menuItems[index].label);
+                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
+                  ref.read(menuProvider.notifier).state = newList;
                   Navigator.pop(context);
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.icecream),
                 onPressed: () {
-                  setState(() => _menuItems[index] = MenuItemModel(icon: Icons.icecream, label: _menuItems[index].label));
-                  _saveData();
+                  final newItem = MenuItemModel(icon: Icons.icecream, label: menuItems[index].label);
+                  final newList = List<MenuItemModel>.from(menuItems)..[index] = newItem;
+                  ref.read(menuProvider.notifier).state = newList;
                   Navigator.pop(context);
                 },
               ),
@@ -80,7 +66,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   /// Displays a dialog to add a new menu category with a name and icon.
-  void _addMenuItem() {
+  void _addMenuItem(BuildContext context, WidgetRef ref) {
     final TextEditingController controller = TextEditingController();
     IconData selectedIcon = Icons.restaurant;
 
@@ -134,13 +120,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 TextButton(
                   onPressed: () {
                     if (controller.text.isNotEmpty) {
-                      setState(() {
-                        _menuItems.add(MenuItemModel(
-                          icon: selectedIcon,
-                          label: controller.text,
-                        ));
-                      });
-                      _saveData();
+                      ref.read(menuProvider.notifier).addMenuItem(MenuItemModel(
+                        icon: selectedIcon,
+                        label: controller.text,
+                      ));
                       Navigator.pop(context);
                     }
                   },
@@ -155,17 +138,18 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final menuItems = ref.watch(menuProvider);
+
     // Navigation button to the finalized menu view
     final exitButton = Center(
       child: CustomButton(
         label: 'Exit',
         onPressed: () {
-          _saveData();
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FinalizedMenuScreen(menuItems: _menuItems),
+              builder: (context) => FinalizedMenuScreen(menuItems: menuItems),
             ),
           );
         },
@@ -180,7 +164,7 @@ class _MenuScreenState extends State<MenuScreen> {
       ),
       extendBodyBehindAppBar: true,
       floatingActionButton: FloatingActionButton(
-        onPressed: _addMenuItem,
+        onPressed: () => _addMenuItem(context, ref),
         backgroundColor: Colors.white70,
         child: const Icon(Icons.add, color: Colors.black),
       ),
@@ -190,11 +174,11 @@ class _MenuScreenState extends State<MenuScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 80),
             child: ListView.separated(
-              itemCount: _menuItems.length,
+              itemCount: menuItems.length,
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                final item = _menuItems[index];
-                return _buildMenuItemRow(item, index);
+                final item = menuItems[index];
+                return _buildMenuItemRow(context, ref, item, index, menuItems);
               },
             ),
           ),
@@ -210,12 +194,12 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   /// Builds a row representing a single menu category.
-  Widget _buildMenuItemRow(MenuItemModel item, int index) {
+  Widget _buildMenuItemRow(BuildContext context, WidgetRef ref, MenuItemModel item, int index, List<MenuItemModel> menuItems) {
     return Row(
       children: [
         IconButton(
           icon: Icon(item.icon, size: 30, color: Colors.white),
-          onPressed: () => _pickIcon(index),
+          onPressed: () => _pickIcon(context, ref, index, menuItems),
         ),
         const SizedBox(width: 10),
         Expanded(
@@ -237,7 +221,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     CustomButton(
                       label: 'Food Items',
                       onPressed: () {
-                        _saveData();
                         // Navigate to specific items within this category
                         Navigator.push(
                           context,
@@ -252,10 +235,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     IconButton(
                       icon: const Icon(Icons.remove_circle, color: Colors.red),
                       onPressed: () {
-                        setState(() {
-                          _menuItems.removeAt(index);
-                        });
-                        _saveData();
+                        ref.read(menuProvider.notifier).removeMenuItem(item);
                       },
                     ),
                   ],

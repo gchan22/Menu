@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_description.dart';
 import 'finalized_menu.dart';
 import 'cart.dart';
-import '../models/cart_state.dart';
 import '../models/category_item.dart';
+import '../providers/cart_provider.dart';
+import '../providers/menu_provider.dart';
+import '../providers/description_provider.dart';
 
 /// FinalizedItemsScreen displays a read-only list of food items in a category for customers.
-class FinalizedItemsScreen extends StatefulWidget {
+class FinalizedItemsScreen extends ConsumerWidget {
   final String category;
   final List<CategoryItemModel> items;
 
@@ -19,12 +22,11 @@ class FinalizedItemsScreen extends StatefulWidget {
   });
 
   @override
-  State<FinalizedItemsScreen> createState() => _FinalizedItemsScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartItems = ref.watch(cartProvider);
+    final menuItems = ref.watch(menuProvider);
+    final descriptionRowsMap = ref.watch(descriptionProvider);
 
-class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
-  @override
-  Widget build(BuildContext context) {
     // Shopping cart FAB with badge, same as in editing screen but for finalized view
     final cartFAB = Stack(
       children: [
@@ -34,14 +36,12 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CartScreen()),
-            ).then((_) {
-              setState(() {});
-            });
+            );
           },
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.shopping_cart, color: Colors.white),
         ),
-        if (CartState.items.isNotEmpty)
+        if (cartItems.isNotEmpty)
           Positioned(
             right: 0,
             top: 0,
@@ -56,7 +56,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
                 minHeight: 20,
               ),
               child: Text(
-                '${CartState.items.length}',
+                '${cartItems.length}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
@@ -71,7 +71,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.category} Items', style: const TextStyle(color: Colors.white)),
+        title: Text('$category Items', style: const TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -82,7 +82,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => FinalizedMenuScreen(
-                  menuItems: CartState.menuItems,
+                  menuItems: menuItems,
                 ),
               ),
             );
@@ -96,11 +96,11 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
             child: ListView.separated(
-              itemCount: widget.items.length,
+              itemCount: items.length,
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                final item = widget.items[index];
-                return _buildItemRow(item);
+                final item = items[index];
+                return _buildItemRow(context, ref, item, descriptionRowsMap);
               },
             ),
           ),
@@ -115,7 +115,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
   }
 
   /// Builds a UI row for a single item in the finalized items list.
-  Widget _buildItemRow(CategoryItemModel item) {
+  Widget _buildItemRow(BuildContext context, WidgetRef ref, CategoryItemModel item, Map<String, List<String>> descriptionRowsMap) {
     final name = item.name;
     final price = item.price;
 
@@ -136,9 +136,7 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
           IconButton(
             icon: const Icon(Icons.add, color: Colors.blueAccent),
             onPressed: () {
-              setState(() {
-                CartState.addItem(item);
-              });
+              ref.read(cartProvider.notifier).addItem(item);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('$name added to cart!'), duration: const Duration(seconds: 1)),
               );
@@ -153,9 +151,9 @@ class _FinalizedItemsScreenState extends State<FinalizedItemsScreen> {
                 MaterialPageRoute(
                   builder: (context) => FinalizedDescriptionScreen(
                     itemName: name,
-                    descriptionRows: CartState.descriptionRowsByItem[name] ?? [],
+                    descriptionRows: descriptionRowsMap[name] ?? [],
                     showSample: true,
-                    category: widget.category,
+                    category: category,
                   ),
                 ),
               );

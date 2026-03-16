@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_items.dart';
 import 'finalized_restaurant.dart';
-import '../models/cart_state.dart';
 import '../models/menu_item.dart';
 import '../models/category_item.dart';
+import '../providers/restaurant_provider.dart';
+import '../providers/menu_provider.dart';
+import '../providers/category_items_provider.dart';
 
 /// FinalizedMenuScreen displays a read-only list of menu categories for customers to browse.
-class FinalizedMenuScreen extends StatelessWidget {
+class FinalizedMenuScreen extends ConsumerWidget {
   final List<MenuItemModel> menuItems;
 
   const FinalizedMenuScreen({super.key, required this.menuItems});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(restaurantInfoProvider);
+    final currentMenuItems = ref.watch(menuProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu', style: TextStyle(color: Colors.white)),
@@ -28,8 +34,8 @@ class FinalizedMenuScreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => FinalizedRestaurantScreen(
-                  restaurantName: CartState.restaurantName,
-                  slogan: CartState.slogan,
+                  restaurantName: info.name,
+                  slogan: info.slogan,
                 ),
               ),
             );
@@ -43,11 +49,11 @@ class FinalizedMenuScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
             child: ListView.separated(
-              itemCount: menuItems.length,
+              itemCount: currentMenuItems.length,
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                final item = menuItems[index];
-                return _buildMenuItemRow(context, item);
+                final item = currentMenuItems[index];
+                return _buildMenuItemRow(context, ref, item);
               },
             ),
           ),
@@ -57,7 +63,7 @@ class FinalizedMenuScreen extends StatelessWidget {
   }
 
   /// Builds a UI row for a single menu category in the finalized view.
-  Widget _buildMenuItemRow(BuildContext context, MenuItemModel item) {
+  Widget _buildMenuItemRow(BuildContext context, WidgetRef ref, MenuItemModel item) {
     return Row(
       children: [
         Icon(item.icon, size: 30, color: Colors.white),
@@ -80,16 +86,14 @@ class FinalizedMenuScreen extends StatelessWidget {
                 CustomButton(
                   label: 'Food Items',
                   onPressed: () {
+                    ref.read(categoryItemsProvider.notifier).initializeCategory(item.label);
+                    final items = ref.read(categoryItemsProvider)[item.label] ?? [];
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => FinalizedItemsScreen(
                           category: item.label,
-                          items: CartState.itemsByCategory[item.label] ?? [
-                            CategoryItemModel(name: 'Sample Item 1', price: '\$10.00'),
-                            CategoryItemModel(name: 'Sample Item 2', price: '\$12.00'),
-                            CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
-                          ],
+                          items: items,
                         ),
                       ),
                     );

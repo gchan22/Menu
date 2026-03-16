@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'finalized_restaurant.dart';
 import 'menu.dart';
-import '../models/cart_state.dart';
+import '../providers/restaurant_provider.dart';
 
 /// RestaurantScreen allows the user to input the name and slogan of their restaurant.
-class RestaurantScreen extends StatefulWidget {
+class RestaurantScreen extends ConsumerStatefulWidget {
   const RestaurantScreen({super.key});
 
   @override
-  State<RestaurantScreen> createState() => _RestaurantScreenState();
+  ConsumerState<RestaurantScreen> createState() => _RestaurantScreenState();
 }
 
-class _RestaurantScreenState extends State<RestaurantScreen> {
+class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
   // Controllers for managing text input
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _sloganController = TextEditingController();
@@ -22,9 +23,12 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   @override
   void initState() {
     super.initState();
-    // Load existing data from the global state
-    _nameController.text = CartState.restaurantName;
-    _sloganController.text = CartState.slogan;
+    // Use addPostFrameCallback to initialize controllers from the provider's state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final info = ref.read(restaurantInfoProvider);
+      _nameController.text = info.name;
+      _sloganController.text = info.slogan;
+    });
   }
 
   @override
@@ -35,9 +39,12 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     super.dispose();
   }
 
-  /// Saves the current input values to the global state.
+  /// Saves the current input values to the Riverpod provider.
   void _saveData() {
-    CartState.updateRestaurantInfo(_nameController.text, _sloganController.text);
+    ref.read(restaurantInfoProvider.notifier).updateInfo(
+      _nameController.text,
+      _sloganController.text,
+    );
   }
 
   @override

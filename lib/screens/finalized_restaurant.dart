@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_menu.dart';
 import 'restaurant.dart';
-import '../models/cart_state.dart';
+import '../providers/restaurant_provider.dart';
+import '../providers/menu_provider.dart';
 
 /// FinalizedRestaurantScreen displays a read-only preview of the restaurant name and slogan.
-class FinalizedRestaurantScreen extends StatelessWidget {
+class FinalizedRestaurantScreen extends ConsumerWidget {
   final String restaurantName;
   final String slogan;
 
@@ -17,7 +19,10 @@ class FinalizedRestaurantScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(restaurantInfoProvider);
+    final menuItems = ref.watch(menuProvider);
+
     // A special button to return to the setup screen and start over
     final newMenuButton = Positioned(
       top: 40,
@@ -39,14 +44,14 @@ class FinalizedRestaurantScreen extends StatelessWidget {
 
     // Displays the restaurant name in a styled container
     final restaurantNameBox = _buildInfoBox(
-      text: restaurantName,
+      text: info.name.isNotEmpty ? info.name : restaurantName,
       fontSize: 24,
       fontWeight: FontWeight.bold,
     );
 
     // Displays the slogan in a styled container
     final sloganBox = _buildInfoBox(
-      text: slogan,
+      text: info.slogan.isNotEmpty ? info.slogan : slogan,
       fontSize: 18,
       fontStyle: FontStyle.italic,
     );
@@ -59,7 +64,7 @@ class FinalizedRestaurantScreen extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => FinalizedMenuScreen(
-              menuItems: CartState.menuItems,
+              menuItems: menuItems,
             ),
           ),
         );

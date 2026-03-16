@@ -105,3 +105,7 @@ that has a + button on bottom right
 
 52. [x] Add a row on the bottom of the cart screen centralized that shows the total 
 cost of all items in the cart as well as show the cost of each item in cart on each row of items
+
+53. [x] Use Riverpod to handle all internal app state and data flow. Have providers 
+directory contain Riverpod providers containing the business logic that
+connects services to UI.

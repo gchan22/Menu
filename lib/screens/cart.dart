@@ -1,30 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../models/cart_state.dart';
 import '../models/category_item.dart';
+import '../providers/cart_provider.dart';
 
 /// CartScreen displays the list of items the user has added to their virtual cart.
-class CartScreen extends StatefulWidget {
+class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartItems = ref.watch(cartProvider);
+    final totalCost = ref.watch(cartTotalProvider);
 
-class _CartScreenState extends State<CartScreen> {
-  /// Calculates the total cost of all items in the cart.
-  double _calculateTotal() {
-    double total = 0.0;
-    for (var item in CartState.items) {
-      // Remove currency symbols and parse the price string
-      String priceStr = item.price.replaceAll(RegExp(r'[^\d.]'), '');
-      total += double.tryParse(priceStr) ?? 0.0;
-    }
-    return total;
-  }
-
-  @override
-  Widget build(BuildContext context) {
     // A styled header box for the cart screen
     final cartTitle = Container(
       width: double.infinity,
@@ -59,7 +47,7 @@ class _CartScreenState extends State<CartScreen> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Text(
-            '\$${_calculateTotal().toStringAsFixed(2)}',
+            '\$${totalCost.toStringAsFixed(2)}',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
           ),
         ],
@@ -84,11 +72,11 @@ class _CartScreenState extends State<CartScreen> {
                   cartTitle,
                   const SizedBox(height: 20),
                   // Render a row for each item in the cart
-                  ...CartState.items.map((item) {
-                    return _buildCartRow(item);
+                  ...cartItems.map((item) {
+                    return _buildCartRow(ref, item);
                   }).toList(),
-                  if (CartState.items.isNotEmpty) totalRow,
-                  if (CartState.items.isEmpty)
+                  if (cartItems.isNotEmpty) totalRow,
+                  if (cartItems.isEmpty)
                     const Padding(
                       padding: EdgeInsets.only(top: 40),
                       child: Text('Your cart is empty', style: TextStyle(fontSize: 18)),
@@ -103,7 +91,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   /// Builds a UI row for an item in the cart, including its price and a remove button.
-  Widget _buildCartRow(CategoryItemModel item) {
+  Widget _buildCartRow(WidgetRef ref, CategoryItemModel item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
@@ -138,9 +126,7 @@ class _CartScreenState extends State<CartScreen> {
           IconButton(
             icon: const Icon(Icons.remove_circle, color: Colors.red),
             onPressed: () {
-              setState(() {
-                CartState.removeItem(item);
-              });
+              ref.read(cartProvider.notifier).removeItem(item);
             },
           ),
         ],

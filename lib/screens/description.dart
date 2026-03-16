@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import 'finalized_description.dart';
-import '../models/cart_state.dart';
+import '../providers/description_provider.dart';
 
 /// DescriptionScreen allows users to add and edit multiple text rows describing a specific food item.
-class DescriptionScreen extends StatefulWidget {
+class DescriptionScreen extends ConsumerStatefulWidget {
   final String itemName;
   final String category; // Used for navigation back to the correct category list
 
@@ -16,10 +17,10 @@ class DescriptionScreen extends StatefulWidget {
   });
 
   @override
-  State<DescriptionScreen> createState() => _DescriptionScreenState();
+  ConsumerState<DescriptionScreen> createState() => _DescriptionScreenState();
 }
 
-class _DescriptionScreenState extends State<DescriptionScreen> {
+class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
   // A list of controllers to manage each dynamic description text field
   final List<TextEditingController> _descriptionControllers = [];
 
@@ -27,10 +28,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   void initState() {
     super.initState();
     // Pre-populate with existing descriptions from global state
-    final existingRows = CartState.descriptionRowsByItem[widget.itemName] ?? [];
-    for (var row in existingRows) {
-      _descriptionControllers.add(TextEditingController(text: row));
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final existingRows = ref.read(descriptionProvider)[widget.itemName] ?? [];
+      setState(() {
+        for (var row in existingRows) {
+          _descriptionControllers.add(TextEditingController(text: row));
+        }
+      });
+    });
   }
 
   @override
@@ -42,9 +47,9 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
     super.dispose();
   }
 
-  /// Saves all non-empty description rows to the global state.
+  /// Saves all non-empty description rows to the Riverpod provider.
   void _saveData() {
-    CartState.updateDescriptionRows(
+    ref.read(descriptionProvider.notifier).setDescriptionRows(
       widget.itemName,
       _descriptionControllers.map((c) => c.text).toList(),
     );
