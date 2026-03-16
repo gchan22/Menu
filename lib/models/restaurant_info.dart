@@ -6,4 +6,14 @@ class RestaurantInfoModel {
   final String slogan;
 
   RestaurantInfoModel({required this.name, required this.slogan});
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'slogan': slogan,
+      };
+
+  factory RestaurantInfoModel.fromMap(Map<String, dynamic> map) => RestaurantInfoModel(
+        name: map['name'] as String? ?? '',
+        slogan: map['slogan'] as String? ?? '',
+      );
 }

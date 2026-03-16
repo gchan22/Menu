@@ -194,7 +194,7 @@ class MenuScreen extends ConsumerWidget {
     return Row(
       children: [
         IconButton(
-          icon: Icon(item.icon, size: 30, color: Colors.white),
+          icon: Icon(item.icon, size: 30, color: Colors.black87),
           onPressed: () => _pickIcon(context, ref, index, menuItems),
         ),
         const SizedBox(width: 10),
@@ -208,11 +208,15 @@ class MenuScreen extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  item.label,
-                  style: const TextStyle(fontSize: 18),
+                Expanded(
+                  child: Text(
+                    item.label,
+                    style: const TextStyle(fontSize: 18),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     CustomButton(
                       label: 'Food Items',

@@ -5,6 +5,7 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'finalized_restaurant.dart';
 import 'menu.dart';
+import 'sign_in.dart';
 import '../providers/restaurant_provider.dart';
 
 /// RestaurantScreen allows the user to input the name and slogan of their restaurant.
@@ -41,10 +42,14 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
 
   /// Saves the current input values to the Riverpod provider.
   void _saveData() {
-    ref.read(restaurantInfoProvider.notifier).updateInfo(
-      _nameController.text,
-      _sloganController.text,
-    );
+    try {
+      ref.read(restaurantInfoProvider.notifier).updateInfo(
+        _nameController.text,
+        _sloganController.text,
+      );
+    } catch (e) {
+      debugPrint('Error saving data: $e');
+    }
   }
 
   @override
@@ -98,6 +103,23 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
       ],
     );
 
+    // Prompt 65: Change 'Sign In' button to 'Sign Out' on restaurant screen
+    final signOutButton = Positioned(
+      top: 40,
+      left: 16,
+      child: CustomButton(
+        label: 'Sign Out',
+        onPressed: () {
+          _saveData();
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
+            (route) => false,
+          );
+        },
+      ),
+    );
+
     return Scaffold(
       body: Stack(
         children: [
@@ -115,6 +137,7 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
               ],
             ),
           ),
+          signOutButton, // Moved to bottom of stack children list to be on top
         ],
       ),
     );

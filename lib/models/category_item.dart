@@ -8,14 +8,14 @@ class CategoryItemModel {
   CategoryItemModel({required this.name, required this.price});
 
   /// Converts the model into a map for storage or transmission.
-  Map<String, String> toMap() => {
+  Map<String, dynamic> toMap() => {
         'name': name,
         'price': price,
       };
 
   /// Creates a model instance from a map.
-  factory CategoryItemModel.fromMap(Map<String, String> map) => CategoryItemModel(
-        name: map['name']!,
-        price: map['price']!,
+  factory CategoryItemModel.fromMap(Map<String, dynamic> map) => CategoryItemModel(
+        name: map['name'] as String,
+        price: map['price'] as String,
       );
 }

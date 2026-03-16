@@ -11,13 +11,14 @@ class MenuItemModel {
 
   /// Converts the model into a map for storage or transmission.
   Map<String, dynamic> toMap() => {
-        'icon': icon,
+        'iconCodePoint': icon.codePoint,
+        'iconFontFamily': icon.fontFamily,
         'label': label,
       };
 
   /// Creates a model instance from a map.
   factory MenuItemModel.fromMap(Map<String, dynamic> map) => MenuItemModel(
-        icon: map['icon'] as IconData,
+        icon: IconData(map['iconCodePoint'] as int, fontFamily: map['iconFontFamily'] as String?),
         label: map['label'] as String,
       );
 }

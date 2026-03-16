@@ -65,7 +65,7 @@ class FinalizedMenuScreen extends ConsumerWidget {
   Widget _buildMenuItemRow(BuildContext context, WidgetRef ref, MenuItemModel item) {
     return Row(
       children: [
-        Icon(item.icon, size: 30, color: Colors.white),
+        Icon(item.icon, size: 30, color: Colors.black87),
         const SizedBox(width: 10),
         Expanded(
           child: Container(
@@ -77,9 +77,12 @@ class FinalizedMenuScreen extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  item.label,
-                  style: const TextStyle(fontSize: 18),
+                Expanded(
+                  child: Text(
+                    item.label,
+                    style: const TextStyle(fontSize: 18),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 // Button to view finalized items within this category
                 CustomButton(

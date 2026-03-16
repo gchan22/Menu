@@ -1,12 +1,37 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/category_item.dart';
+import 'shared_preferences_provider.dart';
 
 /// Notifier class for managing the items belonging to specific categories.
 class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>>> {
+  static const _key = 'category_items';
+
   @override
   Map<String, List<CategoryItemModel>> build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    final data = prefs.getString(_key);
+    if (data != null) {
+      try {
+        final Map<String, dynamic> jsonMap = jsonDecode(data);
+        return jsonMap.map((key, value) {
+          final List<dynamic> list = value;
+          return MapEntry(key, list.map((e) => CategoryItemModel.fromMap(e)).toList());
+        });
+      } catch (e) {
+        // Fallback
+      }
+    }
     // Initial state: empty category items mapping
     return {};
+  }
+
+  void _save() {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final mapToSave = state.map((key, value) {
+      return MapEntry(key, value.map((e) => e.toMap()).toList());
+    });
+    prefs.setString(_key, jsonEncode(mapToSave));
   }
 
   /// Initializes a category with default items if it hasn't been set yet.
@@ -18,18 +43,21 @@ class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>
         CategoryItemModel(name: 'Sample Item 3', price: '\$15.00'),
       ];
       state = {...state, category: defaults};
+      _save();
     }
   }
 
   /// Sets or updates the list of items for a specific category.
   void setCategoryItems(String category, List<CategoryItemModel> items) {
     state = {...state, category: items};
+    _save();
   }
 
   /// Adds a new item to an existing or new category.
   void addCategoryItem(String category, CategoryItemModel item) {
     final currentItems = state[category] ?? [];
     state = {...state, category: [...currentItems, item]};
+    _save();
   }
 
   /// Removes a specific item from a category.
@@ -39,6 +67,7 @@ class CategoryItemsNotifier extends Notifier<Map<String, List<CategoryItemModel>
       ...state,
       category: currentItems.where((i) => i != item).toList(),
     };
+    _save();
   }
 }
 

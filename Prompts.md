@@ -138,3 +138,11 @@ In create account screen have the Back to sign in as a button that goes to sign 
 to what it was before
 
 63. [x] In restaurant screen change new menu button to say Sign In instead of new menu
+
+64. [x] When adding menu rows, items, description, and cart rows save the data even after closing
+the app and reopen with the same data
+
+65. [x] In resturant screen change sign in button to say Sign Out but in 
+finalized_resturant keep the button the same
+
+66. [x] In the sign in screen have an app bar that goes to the finalized_resturant screen

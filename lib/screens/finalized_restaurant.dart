@@ -75,7 +75,6 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
       body: Stack(
         children: [
           const Backdrop(),
-          newMenuButton,
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -89,6 +88,7 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
               ],
             ),
           ),
+          newMenuButton, // Move to bottom to be on top
         ],
       ),
     );

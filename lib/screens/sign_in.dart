@@ -6,7 +6,9 @@ import '../widgets/custom_text_field.dart';
 import 'restaurant.dart';
 import 'create_account.dart';
 import 'success.dart';
+import 'finalized_restaurant.dart';
 import '../providers/service_providers.dart';
+import '../providers/restaurant_provider.dart';
 
 /// SignInScreen provides a login interface with validation for username and password.
 class SignInScreen extends ConsumerStatefulWidget {
@@ -108,7 +110,28 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final info = ref.watch(restaurantInfoProvider);
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FinalizedRestaurantScreen(
+                  restaurantName: info.name,
+                  slogan: info.slogan,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           const Backdrop(),
