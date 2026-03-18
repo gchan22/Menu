@@ -181,3 +181,7 @@ saved data
 
 78. [x] Have the + button on bottom right of screen that adds a new item row in
 item screen say instead + Add New Item
+
+79. [x] Allow the description screen to import pictures outside files by using 
+copy and paste have it as a button above add description and call it + Add Picture
+that lets you add a picture

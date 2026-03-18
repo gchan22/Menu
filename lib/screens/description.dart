@@ -1,12 +1,25 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pasteboard/pasteboard.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/description_input_row.dart';
 import 'finalized_description.dart';
 import '../providers/description_provider.dart';
 
-/// DescriptionScreen allows users to add and edit multiple text rows describing a specific food item.
+/// A wrapper to keep track of either a text controller or image data
+class DescriptionItem {
+  TextEditingController? controller;
+  String? imageData; // Base64 encoded image string
+  bool isImage;
+
+  DescriptionItem({this.controller, this.imageData, this.isImage = false});
+}
+
+/// DescriptionScreen allows users to add and edit multiple text rows and images describing a specific food item.
 class DescriptionScreen extends ConsumerStatefulWidget {
   final String itemName;
   final String category; // Used for navigation back to the correct category list
@@ -22,8 +35,8 @@ class DescriptionScreen extends ConsumerStatefulWidget {
 }
 
 class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
-  // A list of controllers to manage each dynamic description text field
-  final List<TextEditingController> _descriptionControllers = [];
+  // A list of items to manage both dynamic text fields and images
+  final List<DescriptionItem> _descriptionItems = [];
 
   @override
   void initState() {
@@ -33,7 +46,19 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
       final existingRows = ref.read(descriptionProvider)[widget.itemName] ?? [];
       setState(() {
         for (var row in existingRows) {
-          _descriptionControllers.add(TextEditingController(text: row));
+          if (row.startsWith('IMAGE:')) {
+            _descriptionItems.add(DescriptionItem(
+              imageData: row.substring(6),
+              isImage: true,
+            ));
+          } else {
+            // Support legacy data without prefix or explicit TEXT: prefix
+            final text = row.startsWith('TEXT:') ? row.substring(5) : row;
+            _descriptionItems.add(DescriptionItem(
+              controller: TextEditingController(text: text),
+              isImage: false,
+            ));
+          }
         }
       });
     });
@@ -42,24 +67,68 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
   @override
   void dispose() {
     // Dispose all dynamic controllers to prevent memory leaks
-    for (var controller in _descriptionControllers) {
-      controller.dispose();
+    for (var item in _descriptionItems) {
+      item.controller?.dispose();
     }
     super.dispose();
   }
 
   /// Saves all non-empty description rows to the Riverpod provider.
   void _saveData() {
+    final List<String> rows = [];
+    for (var item in _descriptionItems) {
+      if (item.isImage && item.imageData != null) {
+        rows.add('IMAGE:${item.imageData}');
+      } else if (!item.isImage && item.controller != null) {
+        rows.add('TEXT:${item.controller!.text}');
+      }
+    }
     ref.read(descriptionProvider.notifier).setDescriptionRows(
       widget.itemName,
-      _descriptionControllers.map((c) => c.text).toList(),
+      rows,
     );
   }
 
   /// Adds a new empty text field for a new description row.
   void _addTextBox() {
     setState(() {
-      _descriptionControllers.add(TextEditingController());
+      _descriptionItems.add(DescriptionItem(
+        controller: TextEditingController(),
+        isImage: false,
+      ));
+    });
+    _saveData();
+  }
+
+  /// Adds a picture from clipboard (paste) or gallery.
+  Future<void> _addPicture() async {
+    // Try to get from pasteboard first (Copy & Paste)
+    try {
+      final imageBytes = await Pasteboard.image;
+      if (imageBytes != null) {
+        _processImage(imageBytes);
+        return;
+      }
+    } catch (e) {
+      // Pasteboard might fail on some platforms/scenarios
+    }
+
+    // Fallback to Image Picker
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      _processImage(bytes);
+    }
+  }
+
+  void _processImage(Uint8List bytes) {
+    final base64Image = base64Encode(bytes);
+    setState(() {
+      _descriptionItems.add(DescriptionItem(
+        imageData: base64Image,
+        isImage: true,
+      ));
     });
     _saveData();
   }
@@ -94,20 +163,52 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
                 // Dynamic list of description input rows
                 Expanded(
                   child: ListView.separated(
-                    itemCount: _descriptionControllers.length,
+                    itemCount: _descriptionItems.length,
                     separatorBuilder: (context, index) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
-                      return DescriptionInputRow(
-                        controller: _descriptionControllers[index],
-                        onChanged: _saveData,
-                        onDelete: () {
-                          setState(() {
-                            _descriptionControllers[index].dispose();
-                            _descriptionControllers.removeAt(index);
-                          });
-                          _saveData();
-                        },
-                      );
+                      final item = _descriptionItems[index];
+                      if (item.isImage) {
+                        return Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Image.memory(
+                                  base64Decode(item.imageData!),
+                                  fit: BoxFit.contain,
+                                  height: 200,
+                                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 100),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.remove_circle, color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    _descriptionItems.removeAt(index);
+                                  });
+                                  _saveData();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return DescriptionInputRow(
+                          controller: item.controller!,
+                          onChanged: _saveData,
+                          onDelete: () {
+                            setState(() {
+                              item.controller!.dispose();
+                              _descriptionItems.removeAt(index);
+                            });
+                            _saveData();
+                          },
+                        );
+                      }
                     },
                   ),
                 ),
@@ -125,15 +226,21 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
                 onPressed: () {
                   _saveData();
                   // Navigate to the finalized preview of the item description
+                  final List<String> finalRows = [];
+                  for (var item in _descriptionItems) {
+                    if (item.isImage && item.imageData != null) {
+                      finalRows.add('IMAGE:${item.imageData}');
+                    } else if (!item.isImage && item.controller != null && item.controller!.text.isNotEmpty) {
+                      finalRows.add('TEXT:${item.controller!.text}');
+                    }
+                  }
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => FinalizedDescriptionScreen(
                         itemName: widget.itemName,
-                        descriptionRows: _descriptionControllers
-                            .map((c) => c.text)
-                            .where((t) => t.isNotEmpty)
-                            .toList(),
+                        descriptionRows: finalRows,
                         showSample: false,
                         category: widget.category,
                       ),
@@ -145,11 +252,24 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
           ),
         ],
       ),
-      // Floating action button to add more description rows
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _addTextBox,
-        label: const Text('Add Description'),
-        icon: const Icon(Icons.add),
+      // Floating action buttons
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.extended(
+            heroTag: 'add_picture_fab',
+            onPressed: _addPicture,
+            label: const Text('+ Add Picture'),
+            icon: const Icon(Icons.add_a_photo),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton.extended(
+            heroTag: 'add_description_fab',
+            onPressed: _addTextBox,
+            label: const Text('+ Add Description'),
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
