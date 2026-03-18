@@ -26,7 +26,8 @@ Description: This document outlines the requirements for a digital menu creation
 
 ### 2.3 Cart Functionality
 *   **Cost Estimation:** Users (or customers viewing the menu) must be able to add multiple menu items to a virtual cart to estimate the total cost of a combination of items. This includes tax being added to the total cost 
-to the the final cost.
+to the the final cost. There will also be a pay option that clears your cart and thanks the user 
+for paying and then allows you to continue shopping or finish shopping.
 
 ## 3. Data Management and Persistence
 

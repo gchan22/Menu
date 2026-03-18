@@ -193,3 +193,9 @@ the number calculated
 81. [x] Add a button next to the clear button in cart screen and call it Pay.
 Have the pay button clear the cart screen and go to finalized_items screen. Go 
 to finalized_items screen after the pay button is pressed and cart is cleared.
+
+82. [x] Create a thank_you file in screen and have the screen display the text
+Thank You. Under that text have a button that says Continue Shopping that goes to 
+the finalized_items screen and have another button next to it called Finised Shopping
+that goes to finalized_resturant screen. Have the pay button in cart go to 
+thank_you screen.
