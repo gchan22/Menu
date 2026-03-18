@@ -5,10 +5,8 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/item_row.dart';
 import '../widgets/cart_fab.dart';
-import 'cart.dart';
 import 'finalized_items.dart';
 import '../models/category_item.dart';
-import '../providers/cart_provider.dart';
 import '../providers/category_items_provider.dart';
 
 /// ItemsScreen displays and manages a list of food items within a specific category.

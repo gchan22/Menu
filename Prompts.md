@@ -185,3 +185,7 @@ item screen say instead + Add New Item
 79. [x] Allow the description screen to import pictures outside files by using 
 copy and paste have it as a button above add description and call it + Add Picture
 that lets you add a picture
+
+80. [x] Add a new row under the total cost buttom and have it say Tax on the left 
+side and on the right side multiply the number in total cost by 0.08875 and display 
+the number calculated

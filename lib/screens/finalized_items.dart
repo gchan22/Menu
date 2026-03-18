@@ -5,7 +5,6 @@ import '../widgets/finalized_item_row.dart';
 import '../widgets/cart_fab.dart';
 import 'finalized_menu.dart';
 import '../models/category_item.dart';
-import '../providers/cart_provider.dart';
 import '../providers/menu_provider.dart';
 import '../providers/description_provider.dart';
 

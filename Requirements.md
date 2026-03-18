@@ -16,6 +16,7 @@ Description: This document outlines the requirements for a digital menu creation
     *   Ingredients
     *   Origin (e.g., dietary restrictions, sourcing)
     *   Warnings (e.g., allergens)
+    *   Images of food items
 *   **Menu Item Editing:** Users must be able to easily modify existing menu items (e.g., change name, price, description).
 *   **Menu Item Deletion:** Users must be able to delete discontinued menu items, ensuring they no longer appear on the digital menu.
 
