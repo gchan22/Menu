@@ -199,3 +199,15 @@ Thank You. Under that text have a button that says Continue Shopping that goes t
 the finalized_items screen and have another button next to it called Finised Shopping
 that goes to finalized_resturant screen. Have the pay button in cart go to 
 thank_you screen.
+
+83. [x] In menu screen when adding a new category label the icons as Food and
+Drink
+
+84. [x] In items screen next to each row have a button called Add Note. The add note button 
+lets you type into a box and then adds a small text underneath the row
+
+85. [x] In the finalized_items screen also have a Add Note button that lets you add 
+small text underneath the row
+
+86. [x] In thank_you screen when pressed finished shopping button delete the notes that where
+added to each row in items and finalized_items

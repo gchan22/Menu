@@ -4,20 +4,22 @@ class CategoryItemModel {
   final String name;
   /// The price of the food item.
   final String price;
+  /// Optional note for the item.
+  final String? note;
 
-  CategoryItemModel({required this.name, required this.price});
+  CategoryItemModel({required this.name, required this.price, this.note});
 
   /// Converts the model into a map for storage or transmission.
-  /// returns a map assigning name and price
   Map<String, dynamic> toMap() => {
         'name': name,
         'price': price,
+        'note': note,
       };
 
   /// Creates a model instance from a map.
-  /// Packages the object to save data after closing app
   factory CategoryItemModel.fromMap(Map<String, dynamic> map) => CategoryItemModel(
         name: map['name'] as String,
         price: map['price'] as String,
+        note: map['note'] as String?,
       );
 }

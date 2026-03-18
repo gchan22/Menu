@@ -5,6 +5,7 @@ import '../widgets/custom_button.dart';
 import 'finalized_items.dart';
 import 'finalized_restaurant.dart';
 import '../providers/restaurant_provider.dart';
+import '../providers/category_items_provider.dart';
 import '../models/category_item.dart';
 
 /// ThankYouScreen displays a gratitude message after payment and offers navigation options.
@@ -62,6 +63,20 @@ class ThankYouScreen extends ConsumerWidget {
                       CustomButton(
                         label: 'Finished Shopping',
                         onPressed: () {
+                          // Clear all notes from all items in all categories
+                          final allCategoryItems = ref.read(categoryItemsProvider);
+                          for (final category in allCategoryItems.keys) {
+                            final items = allCategoryItems[category] ?? [];
+                            final updatedItems = items.map((item) {
+                              return CategoryItemModel(
+                                name: item.name,
+                                price: item.price,
+                                note: null, // Clear the note
+                              );
+                            }).toList();
+                            ref.read(categoryItemsProvider.notifier).setCategoryItems(category, updatedItems);
+                          }
+
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

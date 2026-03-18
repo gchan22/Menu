@@ -37,23 +37,35 @@ class MenuScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.restaurant,
-                          color: selectedIcon == Icons.restaurant ? Colors.blue : Colors.black,
-                        ),
-                        onPressed: () {
-                          setDialogState(() => selectedIcon = Icons.restaurant);
-                        },
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.restaurant,
+                              color: selectedIcon == Icons.restaurant ? Colors.blue : Colors.black,
+                            ),
+                            onPressed: () {
+                              setDialogState(() => selectedIcon = Icons.restaurant);
+                            },
+                          ),
+                          const Text('Food'),
+                        ],
                       ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.local_drink,
-                          color: selectedIcon == Icons.local_drink ? Colors.blue : Colors.black,
-                        ),
-                        onPressed: () {
-                          setDialogState(() => selectedIcon = Icons.local_drink);
-                        },
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.local_drink,
+                              color: selectedIcon == Icons.local_drink ? Colors.blue : Colors.black,
+                            ),
+                            onPressed: () {
+                              setDialogState(() => selectedIcon = Icons.local_drink);
+                            },
+                          ),
+                          const Text('Drink'),
+                        ],
                       ),
                     ],
                   ),
