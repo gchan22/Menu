@@ -4,6 +4,9 @@ import '../widgets/backdrop.dart';
 import '../widgets/cart_item_row.dart';
 import '../widgets/custom_button.dart';
 import '../providers/cart_provider.dart';
+import '../providers/menu_provider.dart';
+import '../providers/category_items_provider.dart';
+import 'finalized_items.dart';
 
 /// CartScreen displays the list of items the user has added to their virtual cart.
 class CartScreen extends ConsumerWidget {
@@ -126,11 +129,35 @@ class CartScreen extends ConsumerWidget {
                   if (cartItems.isNotEmpty) ...[
                     summaryTable,
                     const SizedBox(height: 20),
-                    CustomButton(
-                      label: 'Clear Cart',
-                      onPressed: () {
-                        ref.read(cartProvider.notifier).clear();
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomButton(
+                          label: 'Clear Cart',
+                          onPressed: () {
+                            ref.read(cartProvider.notifier).clear();
+                          },
+                        ),
+                        const SizedBox(width: 20),
+                        CustomButton(
+                          label: 'Pay',
+                          onPressed: () {
+                            ref.read(cartProvider.notifier).clear();
+                            final menuItems = ref.read(menuProvider);
+                            final category = menuItems.isNotEmpty ? menuItems[0].label : 'Menu';
+                            final items = ref.read(categoryItemsProvider)[category] ?? [];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FinalizedItemsScreen(
+                                  category: category,
+                                  items: items,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                   if (cartItems.isEmpty)

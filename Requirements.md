@@ -25,7 +25,8 @@ Description: This document outlines the requirements for a digital menu creation
 *   **Professional Presentation:** The digital menu should offer a professional and appealing aesthetic suitable for restaurant use.
 
 ### 2.3 Cart Functionality
-*   **Cost Estimation:** Users (or customers viewing the menu) must be able to add multiple menu items to a virtual cart to estimate the total cost of a combination of items.
+*   **Cost Estimation:** Users (or customers viewing the menu) must be able to add multiple menu items to a virtual cart to estimate the total cost of a combination of items. This includes tax being added to the total cost 
+to the the final cost.
 
 ## 3. Data Management and Persistence
 

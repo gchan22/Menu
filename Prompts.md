@@ -189,3 +189,7 @@ that lets you add a picture
 80. [x] Add a new row under the total cost buttom and have it say Tax on the left 
 side and on the right side multiply the number in total cost by 0.08875 and display 
 the number calculated
+
+81. [x] Add a button next to the clear button in cart screen and call it Pay.
+Have the pay button clear the cart screen and go to finalized_items screen. Go 
+to finalized_items screen after the pay button is pressed and cart is cleared.
