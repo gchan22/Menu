@@ -22,4 +22,29 @@ class CategoryItemModel {
         price: map['price'] as String,
         note: map['note'] as String?,
       );
+
+  /// Creates a copy of this model with updated fields.
+  CategoryItemModel copyWith({
+    String? name,
+    String? price,
+    String? note,
+  }) {
+    return CategoryItemModel(
+      name: name ?? this.name,
+      price: price ?? this.price,
+      note: note ?? this.note,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CategoryItemModel &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          price == other.price &&
+          note == other.note;
+
+  @override
+  int get hashCode => name.hashCode ^ price.hashCode ^ note.hashCode;
 }

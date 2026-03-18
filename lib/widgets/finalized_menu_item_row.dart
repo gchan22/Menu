@@ -42,13 +42,11 @@ class FinalizedMenuItemRow extends ConsumerWidget {
                   label: 'Food Items',
                   onPressed: () {
                     ref.read(categoryItemsProvider.notifier).initializeCategory(item.label);
-                    final items = ref.read(categoryItemsProvider)[item.label] ?? [];
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => FinalizedItemsScreen(
                           category: item.label,
-                          items: items,
                         ),
                       ),
                     );

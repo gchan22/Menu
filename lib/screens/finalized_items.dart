@@ -4,19 +4,17 @@ import '../widgets/backdrop.dart';
 import '../widgets/finalized_item_row.dart';
 import '../widgets/cart_fab.dart';
 import 'finalized_menu.dart';
-import '../models/category_item.dart';
 import '../providers/menu_provider.dart';
 import '../providers/description_provider.dart';
+import '../providers/category_items_provider.dart';
 
 /// FinalizedItemsScreen displays a read-only list of food items in a category for customers.
 class FinalizedItemsScreen extends ConsumerWidget {
   final String category;
-  final List<CategoryItemModel> items;
 
   const FinalizedItemsScreen({
     super.key,
     required this.category,
-    required this.items,
   });
 
   /// The screen layout
@@ -24,6 +22,8 @@ class FinalizedItemsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final menuItems = ref.watch(menuProvider);
     final descriptionRowsMap = ref.watch(descriptionProvider);
+    final categoryItemsMap = ref.watch(categoryItemsProvider);
+    final items = categoryItemsMap[category] ?? [];
 
     return Scaffold(
       appBar: AppBar(

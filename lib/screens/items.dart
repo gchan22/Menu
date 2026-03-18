@@ -45,7 +45,6 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
             MaterialPageRoute(
               builder: (context) => FinalizedItemsScreen(
                 category: widget.category,
-                items: currentItems,
               ),
             ),
           );

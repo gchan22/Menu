@@ -211,3 +211,6 @@ small text underneath the row
 
 86. [x] In thank_you screen when pressed finished shopping button delete the notes that where
 added to each row in items and finalized_items
+
+87. [x] In finalized_item and item screen next to the added note allow the deleting
+of the note by a button -

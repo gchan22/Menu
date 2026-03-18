@@ -34,13 +34,11 @@ class FinalizedDescriptionScreen extends ConsumerWidget {
             // Explicit navigation back to the correct category item list
             if (category != null) {
               ref.read(categoryItemsProvider.notifier).initializeCategory(category!);
-              final items = ref.read(categoryItemsProvider)[category!] ?? [];
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => FinalizedItemsScreen(
                     category: category!,
-                    items: items,
                   ),
                 ),
               );

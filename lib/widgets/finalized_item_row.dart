@@ -43,12 +43,8 @@ class FinalizedItemRow extends ConsumerWidget {
                 final itemsMap = ref.read(categoryItemsProvider);
                 final currentItems = itemsMap[category] ?? [];
                 final updatedItems = currentItems.map((i) {
-                  if (i == item) {
-                    return CategoryItemModel(
-                      name: i.name,
-                      price: i.price,
-                      note: noteController.text,
-                    );
+                  if (i.name == item.name && i.price == item.price) {
+                    return i.copyWith(note: noteController.text);
                   }
                   return i;
                 }).toList();
@@ -124,9 +120,30 @@ class FinalizedItemRow extends ConsumerWidget {
           if (note != null && note.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                note,
-                style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.black54),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      note,
+                      style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.black54),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  CustomButton(
+                    label: '-',
+                    onPressed: () {
+                      final itemsMap = ref.read(categoryItemsProvider);
+                      final currentItems = itemsMap[category] ?? [];
+                      final updatedItems = currentItems.map((i) {
+                        if (i.name == item.name && i.price == item.price) {
+                          return i.copyWith(note: '');
+                        }
+                        return i;
+                      }).toList();
+                      ref.read(categoryItemsProvider.notifier).setCategoryItems(category, updatedItems);
+                    },
+                  ),
+                ],
               ),
             ),
         ],

@@ -6,17 +6,14 @@ import 'finalized_items.dart';
 import 'finalized_restaurant.dart';
 import '../providers/restaurant_provider.dart';
 import '../providers/category_items_provider.dart';
-import '../models/category_item.dart';
 
 /// ThankYouScreen displays a gratitude message after payment and offers navigation options.
 class ThankYouScreen extends ConsumerWidget {
   final String category;
-  final List<CategoryItemModel> items;
 
   const ThankYouScreen({
     super.key,
     required this.category,
-    required this.items,
   });
 
   @override
@@ -53,7 +50,6 @@ class ThankYouScreen extends ConsumerWidget {
                             MaterialPageRoute(
                               builder: (context) => FinalizedItemsScreen(
                                 category: category,
-                                items: items,
                               ),
                             ),
                           );
@@ -65,16 +61,12 @@ class ThankYouScreen extends ConsumerWidget {
                         onPressed: () {
                           // Clear all notes from all items in all categories
                           final allCategoryItems = ref.read(categoryItemsProvider);
-                          for (final category in allCategoryItems.keys) {
-                            final items = allCategoryItems[category] ?? [];
+                          for (final categoryKey in allCategoryItems.keys) {
+                            final items = allCategoryItems[categoryKey] ?? [];
                             final updatedItems = items.map((item) {
-                              return CategoryItemModel(
-                                name: item.name,
-                                price: item.price,
-                                note: null, // Clear the note
-                              );
+                              return item.copyWith(note: ''); // Clear the note
                             }).toList();
-                            ref.read(categoryItemsProvider.notifier).setCategoryItems(category, updatedItems);
+                            ref.read(categoryItemsProvider.notifier).setCategoryItems(categoryKey, updatedItems);
                           }
 
                           Navigator.pushAndRemoveUntil(
