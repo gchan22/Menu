@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/finalized_item_row.dart';
 import '../widgets/cart_fab.dart';
+import '../widgets/custom_button.dart';
 import 'finalized_menu.dart';
 import '../providers/menu_provider.dart';
 import '../providers/description_provider.dart';
@@ -68,6 +69,24 @@ class FinalizedItemsScreen extends ConsumerWidget {
             bottom: 16,
             left: 16,
             child: CartFAB(heroTag: 'cartFAB_finalized'),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: CustomButton(
+                label: 'Clear Notes',
+                onPressed: () {
+                  final itemsMap = ref.read(categoryItemsProvider);
+                  final currentItems = itemsMap[category] ?? [];
+                  final updatedItems = currentItems.map((item) {
+                    return item.copyWith(note: '');
+                  }).toList();
+                  ref.read(categoryItemsProvider.notifier).setCategoryItems(category, updatedItems);
+                },
+              ),
+            ),
           ),
         ],
       ),

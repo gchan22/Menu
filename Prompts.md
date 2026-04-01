@@ -214,3 +214,13 @@ added to each row in items and finalized_items
 
 87. [x] In finalized_item and item screen next to the added note allow the deleting
 of the note by a button -
+
+88. [x] In items and finalized_items screen have a button on the bottom middle that 
+says Clear Notes. The Clear Notes button removes all notes added from all rows.
+
+89. [x] When signing in when in sign in screen when email and password does not 
+sign in rather that have a message that says an internal error occured instead say 
+Incorrect Email or Incorrect Password
+
+90. [x] when clicking sign in button in sign in screen and the user does not exist  
+instead of signing a internal error occured say Incorrect Email or Incorrect Password

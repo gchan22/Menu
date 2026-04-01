@@ -35,21 +35,36 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
     final itemsMap = ref.watch(categoryItemsProvider);
     final currentItems = itemsMap[widget.category] ?? [];
 
-    // Button to exit editing and view the finalized items list
-    final exitButton = Center(
-      child: CustomButton(
-        label: 'Exit Editing',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FinalizedItemsScreen(
-                category: widget.category,
+    // Buttons at the bottom middle
+    final bottomButtons = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomButton(
+          label: 'Clear Notes',
+          onPressed: () {
+            final itemsMap = ref.read(categoryItemsProvider);
+            final currentItems = itemsMap[widget.category] ?? [];
+            final updatedItems = currentItems.map((item) {
+              return item.copyWith(note: '');
+            }).toList();
+            ref.read(categoryItemsProvider.notifier).setCategoryItems(widget.category, updatedItems);
+          },
+        ),
+        const SizedBox(width: 16),
+        CustomButton(
+          label: 'Exit Editing',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FinalizedItemsScreen(
+                  category: widget.category,
+                ),
               ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        ),
+      ],
     );
 
 
@@ -83,7 +98,7 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
             bottom: 16,
             left: 0,
             right: 0,
-            child: exitButton,
+            child: bottomButtons,
           ),
         ],
       ),
