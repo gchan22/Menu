@@ -7,6 +7,7 @@ import 'finalized_menu.dart';
 import 'sign_in.dart';
 import '../providers/restaurant_provider.dart';
 import '../providers/menu_provider.dart';
+import '../providers/theme_provider.dart';
 
 /// FinalizedRestaurantScreen displays a read-only preview of the restaurant name and slogan.
 class FinalizedRestaurantScreen extends ConsumerWidget {
@@ -18,6 +19,48 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
     required this.restaurantName,
     required this.slogan,
   });
+
+  void _showThemeDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Theme'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Default'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.defaultTheme);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Light'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.lightTheme);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Dark'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.darkTheme);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Darkest'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.darkestTheme);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   /// The screen layout
   @override
@@ -73,6 +116,16 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
       },
     );
 
+    // Prompt 94: Add 'Change Theme' button to top right
+    final changeThemeButton = Positioned(
+      top: 40,
+      right: 16,
+      child: CustomButton(
+        label: 'Change Theme',
+        onPressed: () => _showThemeDialog(context, ref),
+      ),
+    );
+
     return Scaffold(
       body: Stack(
         children: [
@@ -91,6 +144,7 @@ class FinalizedRestaurantScreen extends ConsumerWidget {
             ),
           ),
           newMenuButton, // Move to bottom to be on top
+          changeThemeButton,
         ],
       ),
     );

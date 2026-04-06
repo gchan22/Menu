@@ -7,6 +7,7 @@ import 'finalized_restaurant.dart';
 import 'menu.dart';
 import 'sign_in.dart';
 import '../providers/restaurant_provider.dart';
+import '../providers/theme_provider.dart';
 
 /// RestaurantScreen allows the user to input the name and slogan of their restaurant.
 class RestaurantScreen extends ConsumerStatefulWidget {
@@ -50,6 +51,48 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
     } catch (e) {
       debugPrint('Error saving data: $e');
     }
+  }
+
+  void _showThemeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Theme'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Default'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.defaultTheme);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Light'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.lightTheme);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Dark'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.darkTheme);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Darkest'),
+              onTap: () {
+                ref.read(themeProvider.notifier).setTheme(AppTheme.darkestTheme);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -120,6 +163,16 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
       ),
     );
 
+    // Prompt 94: Add 'Change Theme' button to top right
+    final changeThemeButton = Positioned(
+      top: 40,
+      right: 16,
+      child: CustomButton(
+        label: 'Change Theme',
+        onPressed: _showThemeDialog,
+      ),
+    );
+
     return Scaffold(
       body: Stack(
         children: [
@@ -138,6 +191,7 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
             ),
           ),
           signOutButton, // Moved to bottom of stack children list to be on top
+          changeThemeButton,
         ],
       ),
     );

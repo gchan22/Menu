@@ -224,3 +224,21 @@ Incorrect Email or Incorrect Password
 
 90. [x] when clicking sign in button in sign in screen and the user does not exist  
 instead of signing a internal error occured say Incorrect Email or Incorrect Password
+
+91. [x] Create a newfile in widgets called dark_backdrop.dart have it do the same
+as backdrop.dart but instead of a gradiant that goes from dark blue to dark green
+
+92. [x] Create a newfile in widgets called light_backdrop.dart have it do the same
+as backdrop.dart but instead of a gradiant that goes from yellow to pink
+
+93. [x] Create a new file in widgets called darkest_backdrop.dart have it do the same
+as backdrop.dart but instead have a gradiant go from dark red to black
+
+94. [x] Create a button on resurant and finalized_restaurant screen on the top 
+right called Change Theme and do nothing
+
+95. [x] Have the change theme button in resturant and finalized_restaurant screen
+allow you to change the background of all screens to the user chosen background 
+choosing from backdrop.dart, light_backdrop.dart, dark_backdrop.dart, and darkest_backdrop.dart
+
+
