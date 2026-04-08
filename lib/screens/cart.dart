@@ -5,6 +5,7 @@ import '../widgets/cart_item_row.dart';
 import '../widgets/custom_button.dart';
 import '../providers/cart_provider.dart';
 import '../providers/menu_provider.dart';
+import '../models/category_item.dart';
 import 'thank_you.dart';
 
 /// CartScreen displays the list of items the user has added to their virtual cart.
@@ -45,6 +46,12 @@ class CartScreen extends ConsumerWidget {
 
     final tax = totalCost * 0.08875;
     final overallTotal = totalCost + tax;
+
+    // Group items by their model to display quantity correctly
+    final Map<CategoryItemModel, int> groupedItems = {};
+    for (var item in cartItems) {
+      groupedItems[item] = (groupedItems[item] ?? 0) + 1;
+    }
 
     // Total cost rows displayed at the bottom of the list
     final summaryTable = Container(
@@ -121,9 +128,9 @@ class CartScreen extends ConsumerWidget {
                 children: [
                   cartTitle,
                   const SizedBox(height: 20),
-                  // Render a row for each item in the cart
-                  ...cartItems.map((item) {
-                    return CartItemRow(item: item);
+                  // Render a row for each item in the cart, grouping duplicates
+                  ...groupedItems.entries.map((entry) {
+                    return CartItemRow(item: entry.key, quantity: entry.value);
                   }),
                   if (cartItems.isNotEmpty) ...[
                     summaryTable,

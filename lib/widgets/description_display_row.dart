@@ -12,6 +12,7 @@ class DescriptionDisplayRow extends StatelessWidget {
     this.isSample = false,
   });
 
+  /// Add a image as a row.
   @override
   Widget build(BuildContext context) {
     if (text.startsWith('IMAGE:')) {

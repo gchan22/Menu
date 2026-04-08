@@ -22,7 +22,7 @@ Description: This document outlines the requirements for a digital menu creation
 
 ### 2.2 User Experience and Interface
 *   **User-Friendly Interface:** The application must be intuitive and simple to navigate, designed for first-time users without requiring extensive instructions.
-*   **Professional Presentation:** The digital menu should offer a professional and appealing aesthetic suitable for restaurant use.
+*   **Professional Presentation:** The digital menu should offer a professional and appealing aesthetic suitable for restaurant use including theme change to be more visually pleasing.
 
 ### 2.3 Cart Functionality
 *   **Cost Estimation:** Users (or customers viewing the menu) must be able to add multiple menu items to a virtual cart to estimate the total cost of a combination of items. This includes tax being added to the total cost 

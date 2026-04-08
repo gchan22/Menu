@@ -6,10 +6,12 @@ import '../providers/cart_provider.dart';
 /// A UI row for an item in the cart, including its price and a remove button.
 class CartItemRow extends ConsumerWidget {
   final CategoryItemModel item;
+  final int quantity;
 
   const CartItemRow({
     super.key,
     required this.item,
+    required this.quantity,
   });
 
   @override
@@ -34,7 +36,7 @@ class CartItemRow extends ConsumerWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        item.name,
+                        '$quantity ${item.name}',
                         style: const TextStyle(fontSize: 18),
                         overflow: TextOverflow.ellipsis,
                       ),

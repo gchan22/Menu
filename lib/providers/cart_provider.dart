@@ -50,8 +50,13 @@ class CartNotifier extends Notifier<List<CategoryItemModel>> {
 
   /// Removes a specific item instance from the shopping cart.
   void removeItem(CategoryItemModel item) {
-    state = state.where((i) => i != item).toList();
-    _save();
+    final list = [...state];
+    final index = list.lastIndexOf(item);
+    if (index != -1) {
+      list.removeAt(index);
+      state = list;
+      _save();
+    }
   }
 
   /// Clears all items from the cart.
