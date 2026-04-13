@@ -248,3 +248,9 @@ the number of the same itemand if 1 item left then remove the row
 
 97. [x] In cart file in screens folder break up code into reusable widgets in widgets
 folder to condense code.
+
+98. [x] In choice menu file in sceen folder break up code into reusable widgets
+
+99. [x] In create_account file in sceen folder break up code into reusable widgets
+
+100.
