@@ -246,3 +246,5 @@ saying the amount of the item that was added and if only 1 item that say 1 befor
 the item name if more than 1 item then if clicking the - to remove instead decrease 
 the number of the same itemand if 1 item left then remove the row
 
+97. [x] In cart file in screens folder break up code into reusable widgets in widgets
+folder to condense code.
