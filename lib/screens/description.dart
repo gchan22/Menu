@@ -5,19 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pasteboard/pasteboard.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/description_input_row.dart';
-import 'finalized_description.dart';
+import '../models/description_item.dart';
+import '../widgets/description_list_view.dart';
+import '../widgets/description_exit_button.dart';
+import '../widgets/description_fabs.dart';
 import '../providers/description_provider.dart';
-
-/// A wrapper to keep track of either a text controller or image data
-class DescriptionItem {
-  TextEditingController? controller;
-  String? imageData; // Base64 encoded image string
-  bool isImage;
-
-  DescriptionItem({this.controller, this.imageData, this.isImage = false});
-}
 
 /// DescriptionScreen allows users to add and edit multiple text rows and images describing a specific food item.
 class DescriptionScreen extends ConsumerStatefulWidget {
@@ -161,56 +153,19 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
                 ),
                 const SizedBox(height: 20),
                 // Dynamic list of description input rows
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: _descriptionItems.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
+                DescriptionListView(
+                  items: _descriptionItems,
+                  onDelete: (index) {
+                    setState(() {
                       final item = _descriptionItems[index];
-                      if (item.isImage) {
-                        return Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Image.memory(
-                                  base64Decode(item.imageData!),
-                                  fit: BoxFit.contain,
-                                  height: 200,
-                                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 100),
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.remove_circle, color: Colors.red),
-                                onPressed: () {
-                                  setState(() {
-                                    _descriptionItems.removeAt(index);
-                                  });
-                                  _saveData();
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return DescriptionInputRow(
-                          controller: item.controller!,
-                          onChanged: _saveData,
-                          onDelete: () {
-                            setState(() {
-                              item.controller!.dispose();
-                              _descriptionItems.removeAt(index);
-                            });
-                            _saveData();
-                          },
-                        );
+                      if (!item.isImage) {
+                        item.controller?.dispose();
                       }
-                    },
-                  ),
+                      _descriptionItems.removeAt(index);
+                    });
+                    _saveData();
+                  },
+                  onSave: _saveData,
                 ),
               ],
             ),
@@ -221,55 +176,20 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
             left: 0,
             right: 0,
             child: Center(
-              child: CustomButton(
-                label: 'Exit Editing',
-                onPressed: () {
-                  _saveData();
-                  // Navigate to the finalized preview of the item description
-                  final List<String> finalRows = [];
-                  for (var item in _descriptionItems) {
-                    if (item.isImage && item.imageData != null) {
-                      finalRows.add('IMAGE:${item.imageData}');
-                    } else if (!item.isImage && item.controller != null && item.controller!.text.isNotEmpty) {
-                      finalRows.add('TEXT:${item.controller!.text}');
-                    }
-                  }
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FinalizedDescriptionScreen(
-                        itemName: widget.itemName,
-                        descriptionRows: finalRows,
-                        showSample: false,
-                        category: widget.category,
-                      ),
-                    ),
-                  );
-                },
+              child: DescriptionExitButton(
+                itemName: widget.itemName,
+                category: widget.category,
+                descriptionItems: _descriptionItems,
+                onSave: _saveData,
               ),
             ),
           ),
         ],
       ),
       // Floating action buttons
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton.extended(
-            heroTag: 'add_picture_fab',
-            onPressed: _addPicture,
-            label: const Text('+ Add Picture'),
-            icon: const Icon(Icons.add_a_photo),
-          ),
-          const SizedBox(height: 10),
-          FloatingActionButton.extended(
-            heroTag: 'add_description_fab',
-            onPressed: _addTextBox,
-            label: const Text('+ Add Description'),
-            icon: const Icon(Icons.add),
-          ),
-        ],
+      floatingActionButton: DescriptionFabs(
+        onAddPicture: _addPicture,
+        onAddDescription: _addTextBox,
       ),
     );
   }

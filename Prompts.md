@@ -253,4 +253,8 @@ folder to condense code.
 
 99. [x] In create_account file in sceen folder break up code into reusable widgets
 
-100.
+100. [x] In description file in sceen folder break up code into reusable widgets
+
+101. [x] In finalized_description file in sceen folder break up code into reusable widgets
+
+102. [ ] In finalized_item file in sceen folder break up code into reusable widgets
