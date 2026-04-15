@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/item_row.dart';
 import '../widgets/cart_fab.dart';
-import 'finalized_items.dart';
-import '../models/category_item.dart';
 import '../providers/category_items_provider.dart';
+import '../widgets/items_list.dart';
+import '../widgets/items_bottom_buttons.dart';
+import '../widgets/add_item_fab.dart';
 
 /// ItemsScreen displays and manages a list of food items within a specific category.
 class ItemsScreen extends ConsumerStatefulWidget {
@@ -31,43 +29,6 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to changes in items for this specific category
-    final itemsMap = ref.watch(categoryItemsProvider);
-    final currentItems = itemsMap[widget.category] ?? [];
-
-    // Buttons at the bottom middle
-    final bottomButtons = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomButton(
-          label: 'Clear Notes',
-          onPressed: () {
-            final itemsMap = ref.read(categoryItemsProvider);
-            final currentItems = itemsMap[widget.category] ?? [];
-            final updatedItems = currentItems.map((item) {
-              return item.copyWith(note: '');
-            }).toList();
-            ref.read(categoryItemsProvider.notifier).setCategoryItems(widget.category, updatedItems);
-          },
-        ),
-        const SizedBox(width: 16),
-        CustomButton(
-          label: 'Exit Editing',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FinalizedItemsScreen(
-                  category: widget.category,
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.category} Items'),
@@ -80,14 +41,7 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
           const Backdrop(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 80.0),
-            child: ListView.separated(
-              itemCount: currentItems.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = currentItems[index];
-                return ItemRow(item: item, category: widget.category);
-              },
-            ),
+            child: ItemsList(category: widget.category),
           ),
           const Positioned(
             bottom: 16,
@@ -98,90 +52,11 @@ class _ItemsScreenState extends ConsumerState<ItemsScreen> {
             bottom: 16,
             left: 0,
             right: 0,
-            child: bottomButtons,
+            child: ItemsBottomButtons(category: widget.category),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _showAddItemDialog(context, ref);
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('Add New Item'),
-      ),
-    );
-  }
-
-  /// Displays a dialog to add a new food item with a name and price.
-  void _showAddItemDialog(BuildContext context, WidgetRef ref) {
-    final nameController = TextEditingController();
-    final priceController = TextEditingController();
-
-    String formatPrice(String input) {
-      // Remove non-numeric characters except for the decimal point
-      String cleaned = input.replaceAll(RegExp(r'[^0-9.]'), '');
-      if (cleaned.isEmpty) return input;
-
-      double? value = double.tryParse(cleaned);
-      if (value == null) return input;
-
-      // Format with commas and 2 decimal places
-      String parts = value.toStringAsFixed(2);
-      List<String> split = parts.split('.');
-      String integerPart = split[0];
-      String decimalPart = split[1];
-
-      // Add commas to integer part
-      RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-      String formattedInteger = integerPart.replaceAllMapped(reg, (Match m) => '${m[1]},');
-
-      return '\$$formattedInteger.$decimalPart';
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Item'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomTextField(
-                controller: nameController,
-                label: 'Item Name',
-                filled: false,
-              ),
-              CustomTextField(
-                controller: priceController,
-                label: 'Price (e.g., \$10.00)',
-                filled: false,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
-                  final formattedPrice = formatPrice(priceController.text);
-                  ref.read(categoryItemsProvider.notifier).addCategoryItem(
-                    widget.category,
-                    CategoryItemModel(
-                      name: nameController.text,
-                      price: formattedPrice,
-                    ),
-                  );
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
+      floatingActionButton: AddItemFab(category: widget.category),
     );
   }
 }
