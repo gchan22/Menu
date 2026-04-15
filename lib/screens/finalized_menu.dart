@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/finalized_menu_item_row.dart';
+import '../widgets/finalized_menu_list.dart';
 import 'finalized_restaurant.dart';
 import '../models/menu_item.dart';
 import '../providers/restaurant_provider.dart';
-import '../providers/menu_provider.dart';
 
 /// FinalizedMenuScreen displays a read-only list of menu categories for customers to browse.
 class FinalizedMenuScreen extends ConsumerWidget {
@@ -17,7 +16,6 @@ class FinalizedMenuScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final info = ref.watch(restaurantInfoProvider);
-    final currentMenuItems = ref.watch(menuProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,14 +44,7 @@ class FinalizedMenuScreen extends ConsumerWidget {
           const Backdrop(),
           Padding(
             padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
-            child: ListView.separated(
-              itemCount: currentMenuItems.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = currentMenuItems[index];
-                return FinalizedMenuItemRow(item: item);
-              },
-            ),
+            child: const FinalizedMenuList(),
           ),
         ],
       ),

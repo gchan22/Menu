@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/finalized_item_row.dart';
 import '../widgets/cart_fab.dart';
-import '../widgets/custom_button.dart';
+import '../widgets/finalized_items_list.dart';
+import '../widgets/clear_notes_button.dart';
 import 'finalized_menu.dart';
 import '../providers/menu_provider.dart';
-import '../providers/description_provider.dart';
-import '../providers/category_items_provider.dart';
 
 /// FinalizedItemsScreen displays a read-only list of food items in a category for customers.
 class FinalizedItemsScreen extends ConsumerWidget {
@@ -22,9 +20,6 @@ class FinalizedItemsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final menuItems = ref.watch(menuProvider);
-    final descriptionRowsMap = ref.watch(descriptionProvider);
-    final categoryItemsMap = ref.watch(categoryItemsProvider);
-    final items = categoryItemsMap[category] ?? [];
 
     return Scaffold(
       appBar: AppBar(
@@ -52,18 +47,7 @@ class FinalizedItemsScreen extends ConsumerWidget {
           const Backdrop(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
-            child: ListView.separated(
-              itemCount: items.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return FinalizedItemRow(
-                  item: item,
-                  category: category,
-                  descriptionRows: descriptionRowsMap[item.name] ?? [],
-                );
-              },
-            ),
+            child: FinalizedItemsList(category: category),
           ),
           const Positioned(
             bottom: 16,
@@ -75,17 +59,7 @@ class FinalizedItemsScreen extends ConsumerWidget {
             left: 0,
             right: 0,
             child: Center(
-              child: CustomButton(
-                label: 'Clear Notes',
-                onPressed: () {
-                  final itemsMap = ref.read(categoryItemsProvider);
-                  final currentItems = itemsMap[category] ?? [];
-                  final updatedItems = currentItems.map((item) {
-                    return item.copyWith(note: '');
-                  }).toList();
-                  ref.read(categoryItemsProvider.notifier).setCategoryItems(category, updatedItems);
-                },
-              ),
+              child: ClearNotesButton(category: category),
             ),
           ),
         ],
