@@ -264,3 +264,5 @@ folder to condense code.
 104. [x] In finalized_restaurant file in screen folder break up code into reusable widgets
 
 105. [x] In items file in screen folder break up code into reusable widgets
+
+106. [x] In menu file in screen folder break up code into reusable widgets
