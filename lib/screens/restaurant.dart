@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
+import '../widgets/restaurant_input_fields.dart';
+import '../widgets/restaurant_action_buttons.dart';
+import '../widgets/restaurant_sign_out_button.dart';
+import '../widgets/restaurant_theme_button.dart';
 import 'finalized_restaurant.dart';
 import 'menu.dart';
-import 'sign_in.dart';
 import '../providers/restaurant_provider.dart';
-import '../providers/theme_provider.dart';
 
 /// RestaurantScreen allows the user to input the name and slogan of their restaurant.
 class RestaurantScreen extends ConsumerStatefulWidget {
@@ -53,126 +53,8 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
     }
   }
 
-  void _showThemeDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Choose Theme'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Default'),
-              onTap: () {
-                ref.read(themeProvider.notifier).setTheme(AppTheme.defaultTheme);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Light'),
-              onTap: () {
-                ref.read(themeProvider.notifier).setTheme(AppTheme.lightTheme);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Dark'),
-              onTap: () {
-                ref.read(themeProvider.notifier).setTheme(AppTheme.darkTheme);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Darkest'),
-              onTap: () {
-                ref.read(themeProvider.notifier).setTheme(AppTheme.darkestTheme);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Custom text field for the restaurant name
-    final nameField = CustomTextField(
-      controller: _nameController,
-      label: 'Restaurant Name',
-    );
-
-    // Custom text field for the restaurant slogan
-    final sloganField = CustomTextField(
-      controller: _sloganController,
-      label: 'Slogan',
-    );
-
-    // Layout for the main action buttons
-    final actionButtons = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomButton(
-          label: 'Exit Editing',
-          onPressed: () {
-            _saveData();
-            // Navigate to the finalized preview screen
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FinalizedRestaurantScreen(
-                  restaurantName: _nameController.text,
-                  slogan: _sloganController.text,
-                ),
-              ),
-            );
-          },
-        ),
-        const SizedBox(width: 20),
-        CustomButton(
-          label: 'Edit Menu',
-          onPressed: () {
-            _saveData();
-            // Navigate to the menu editing screen
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MenuScreen(),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-
-    // Prompt 65: Change 'Sign In' button to 'Sign Out' on restaurant screen
-    final signOutButton = Positioned(
-      top: 40,
-      left: 16,
-      child: CustomButton(
-        label: 'Sign Out',
-        onPressed: () {
-          _saveData();
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const SignInScreen()),
-            (route) => false,
-          );
-        },
-      ),
-    );
-
-    // Prompt 94: Add 'Change Theme' button to top right
-    final changeThemeButton = Positioned(
-      top: 40,
-      right: 16,
-      child: CustomButton(
-        label: 'Change Theme',
-        onPressed: _showThemeDialog,
-      ),
-    );
-
     return Scaffold(
       body: Stack(
         children: [
@@ -182,16 +64,39 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                nameField,
-                const SizedBox(height: 20),
-                sloganField,
+                RestaurantInputFields(
+                  nameController: _nameController,
+                  sloganController: _sloganController,
+                ),
                 const SizedBox(height: 40),
-                actionButtons,
+                RestaurantActionButtons(
+                  onExitEditing: () {
+                    _saveData();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FinalizedRestaurantScreen(
+                          restaurantName: _nameController.text,
+                          slogan: _sloganController.text,
+                        ),
+                      ),
+                    );
+                  },
+                  onEditMenu: () {
+                    _saveData();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MenuScreen(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
-          signOutButton, // Moved to bottom of stack children list to be on top
-          changeThemeButton,
+          RestaurantSignOutButton(onSignOut: _saveData),
+          const RestaurantThemeButton(),
         ],
       ),
     );
