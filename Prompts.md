@@ -266,3 +266,7 @@ folder to condense code.
 105. [x] In items file in screen folder break up code into reusable widgets
 
 106. [x] In menu file in screen folder break up code into reusable widgets
+
+107. [x] Change code to allow data to be saved to firestore in firebase
+
+108. [ ] In restaurant file in screen folder break up code into reusable widgets

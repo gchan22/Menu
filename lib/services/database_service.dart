@@ -4,12 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Saves user information (username and password) to Firestore.
-  Future<void> saveUser(String uid, String username, String password) async {
+  /// Saves user information (username) to Firestore.
+  Future<void> saveUser(String uid, String username) async {
     try {
       await _db.collection('users').doc(uid).set({
         'username': username,
-        'password': password,
         'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
@@ -17,15 +16,26 @@ class DatabaseService {
     }
   }
 
-  /// Mock database logic
+  /// Fetches data from the 'app_data' Firestore collection.
   Future<List<String>> fetchData() async {
-    // Simulate data fetching
-    await Future.delayed(const Duration(seconds: 1));
-    return ['Item 1', 'Item 2', 'Item 3'];
+    try {
+      final snapshot = await _db.collection('app_data').orderBy('createdAt').get();
+      return snapshot.docs.map((doc) => doc.data()['value'] as String).toList();
+    } catch (e) {
+      print('Error fetching data: $e');
+      return [];
+    }
   }
 
+  /// Saves a string to the 'app_data' Firestore collection.
   Future<void> saveData(String data) async {
-    // Simulate data saving
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      await _db.collection('app_data').add({
+        'value': data,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error saving data: $e');
+    }
   }
 }
