@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
-import 'create_account.dart';
+import '../widgets/sign_in_input_fields.dart';
+import '../widgets/sign_in_action_buttons.dart';
 import 'success.dart';
 import 'finalized_restaurant.dart';
 import '../providers/service_providers.dart';
@@ -150,53 +149,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  CustomTextField(
-                    controller: _usernameController,
-                    label: 'Email or Username',
-                    validator: _validateUsername,
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    controller: _passwordController,
-                    label: 'Password',
-                    obscureText: !_isPasswordVisible,
-                    validator: _validatePassword,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                    ),
+                  SignInInputFields(
+                    usernameController: _usernameController,
+                    passwordController: _passwordController,
+                    isPasswordVisible: _isPasswordVisible,
+                    onTogglePasswordVisibility: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                    usernameValidator: _validateUsername,
+                    passwordValidator: _validatePassword,
                   ),
                   const SizedBox(height: 40),
-                  if (_isLoading)
-                    const CircularProgressIndicator(color: Colors.white)
-                  else
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomButton(
-                          label: 'Sign In',
-                          onPressed: _handleSignIn,
-                        ),
-                        const SizedBox(width: 20),
-                        CustomButton(
-                          label: 'Create Account',
-                          onPressed: () {
-                            // Navigate to the create account screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const CreateAccountScreen()),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                  SignInActionButtons(
+                    isLoading: _isLoading,
+                    onSignIn: _handleSignIn,
+                  ),
                 ],
               ),
             ),

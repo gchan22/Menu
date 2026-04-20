@@ -270,3 +270,7 @@ folder to condense code.
 107. [x] Change code to allow data to be saved to firestore in firebase
 
 108. [x] In restaurant file in screen folder break up code into reusable widgets
+
+109. [x] In sign in file in screen folder break up code into reusable widgets
+
+110. [ ]
