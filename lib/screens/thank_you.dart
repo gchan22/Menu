@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/backdrop.dart';
-import '../widgets/custom_button.dart';
-import 'finalized_items.dart';
-import 'finalized_restaurant.dart';
-import '../providers/restaurant_provider.dart';
-import '../providers/category_items_provider.dart';
+import '../widgets/thank_you_header.dart';
+import '../widgets/thank_you_action_buttons.dart';
 
 /// ThankYouScreen displays a gratitude message after payment and offers navigation options.
-class ThankYouScreen extends ConsumerWidget {
+class ThankYouScreen extends StatelessWidget {
   final String category;
 
   const ThankYouScreen({
@@ -17,9 +13,7 @@ class ThankYouScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final info = ref.watch(restaurantInfoProvider);
-
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
@@ -30,59 +24,9 @@ class ThankYouScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Thank You',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  const ThankYouHeader(),
                   const SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomButton(
-                        label: 'Continue Shopping',
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FinalizedItemsScreen(
-                                category: category,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      CustomButton(
-                        label: 'Finished Shopping',
-                        onPressed: () {
-                          // Clear all notes from all items in all categories
-                          final allCategoryItems = ref.read(categoryItemsProvider);
-                          for (final categoryKey in allCategoryItems.keys) {
-                            final items = allCategoryItems[categoryKey] ?? [];
-                            final updatedItems = items.map((item) {
-                              return item.copyWith(note: ''); // Clear the note
-                            }).toList();
-                            ref.read(categoryItemsProvider.notifier).setCategoryItems(categoryKey, updatedItems);
-                          }
-
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FinalizedRestaurantScreen(
-                                restaurantName: info.name,
-                                slogan: info.slogan,
-                              ),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                  ThankYouActionButtons(category: category),
                 ],
               ),
             ),

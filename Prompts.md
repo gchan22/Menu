@@ -274,3 +274,5 @@ folder to condense code.
 109. [x] In sign in file in screen folder break up code into reusable widgets
 
 110. [x] In sucess file in screen folder break up code into reusable widgets
+
+111. [x] In thank_you file in screen folder break up code into reusable
