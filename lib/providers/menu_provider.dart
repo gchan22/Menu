@@ -1,74 +1,70 @@
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/menu_item.dart';
-import 'shared_preferences_provider.dart';
 import 'service_providers.dart';
 
 /// Notifier class for managing the main menu categories.
-class MenuNotifier extends Notifier<List<MenuItemModel>> {
-  static const _baseKey = 'menu_items';
-
-  String _getUserKey() {
-    final user = ref.read(authStateProvider).value;
-    final uid = user?.uid ?? 'guest';
-    return '${uid}_$_baseKey';
-  }
-
-  /// load saved preferences
+class MenuNotifier extends AsyncNotifier<List<MenuItemModel>> {
+  /// load saved menu categories from Firestore
   @override
-  List<MenuItemModel> build() {
+  Future<List<MenuItemModel>> build() async {
     // Watch for authentication state changes
-    ref.watch(authStateProvider);
+    final user = ref.watch(authStateProvider).value;
+    if (user == null) {
+      return [];
+    }
 
-    final prefs = ref.watch(sharedPreferencesProvider);
-    final data = prefs.getString(_getUserKey());
-    if (data != null) {
-      try {
-        final List<dynamic> jsonList = jsonDecode(data);
-        return jsonList.map((e) => MenuItemModel.fromMap(e)).toList();
-      } catch (e) {
-        // Fallback to default
-      }
+    final db = ref.read(databaseServiceProvider);
+    final userData = await db.fetchUserData(user.uid);
+
+    if (userData != null && userData.containsKey('menuItems')) {
+      final List<dynamic> jsonList = userData['menuItems'];
+      return jsonList.map((e) => MenuItemModel.fromMap(e as Map<String, dynamic>)).toList();
     }
 
     // Default categories for the application
     return [];
   }
 
-  /// Save current state to preferences
-  void _save() {
-    final prefs = ref.read(sharedPreferencesProvider);
-    final data = jsonEncode(state.map((e) => e.toMap()).toList());
-    prefs.setString(_getUserKey(), data);
+  /// Save current state to Firestore
+  Future<void> _save() async {
+    final user = ref.read(authStateProvider).value;
+    if (user == null) return;
+
+    final db = ref.read(databaseServiceProvider);
+    final data = state.value!.map((e) => e.toMap()).toList();
+    await db.saveField(user.uid, 'menuItems', data);
   }
 
   /// Adds a new category to the menu.
-  void addMenuItem(MenuItemModel item) {
-    state = [...state, item];
-    _save();
+  Future<void> addMenuItem(MenuItemModel item) async {
+    final current = state.value ?? [];
+    state = AsyncData([...current, item]);
+    await _save();
   }
 
   /// Updates an existing menu item at a specific index.
-  void updateMenuItem(int index, MenuItemModel newItem) {
-    final newList = List<MenuItemModel>.from(state)..[index] = newItem;
-    state = newList;
-    _save();
+  Future<void> updateMenuItem(int index, MenuItemModel newItem) async {
+    final current = state.value ?? [];
+    final newList = List<MenuItemModel>.from(current)..[index] = newItem;
+    state = AsyncData(newList);
+    await _save();
   }
 
   /// Removes a specific category from the menu.
-  void removeMenuItem(MenuItemModel item) {
-    state = state.where((i) => i != item).toList();
-    _save();
+  Future<void> removeMenuItem(MenuItemModel item) async {
+    final current = state.value ?? [];
+    state = AsyncData(current.where((i) => i != item).toList());
+    await _save();
   }
 
   /// Resets the menu items list to its initial empty state.
-  void reset() {
-    state = [];
-    _save();
+  Future<void> reset() async {
+    state = const AsyncData([]);
+    await _save();
   }
 }
 
 /// Provider for managing the list of top-level menu categories.
-final menuProvider = NotifierProvider<MenuNotifier, List<MenuItemModel>>(() {
+final menuProvider = AsyncNotifierProvider<MenuNotifier, List<MenuItemModel>>(() {
   return MenuNotifier();
 });

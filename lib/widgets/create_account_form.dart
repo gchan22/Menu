@@ -101,7 +101,7 @@ class _CreateAccountFormState extends ConsumerState<CreateAccountForm> {
       // 4. Save to Database (non-blocking for the flow)
       /// if take to long then timeout
       try {
-        await db.saveUser(user.uid, input).timeout(const Duration(seconds: 5));
+        await db.saveField(user.uid, 'username', input).timeout(const Duration(seconds: 5));
       } catch (e) {
         // Log error but don't stop the user flow if account was created
         debugPrint('Database save warning: $e');

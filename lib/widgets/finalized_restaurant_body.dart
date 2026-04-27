@@ -18,19 +18,23 @@ class FinalizedRestaurantBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final info = ref.watch(restaurantInfoProvider);
-    final menuItems = ref.watch(menuProvider);
+    final asyncInfo = ref.watch(restaurantInfoProvider);
+    final asyncMenu = ref.watch(menuProvider);
+    final menuItems = asyncMenu.value ?? [];
+
+    final resolvedName = asyncInfo.value?.name ?? '';
+    final resolvedSlogan = asyncInfo.value?.slogan ?? '';
 
     // Displays the restaurant name in a styled container
     final restaurantNameBox = InfoBox(
-      text: info.name.isNotEmpty ? info.name : restaurantName,
+      text: resolvedName.isNotEmpty ? resolvedName : restaurantName,
       fontSize: 24,
       fontWeight: FontWeight.bold,
     );
 
     // Displays the slogan in a styled container
     final sloganBox = InfoBox(
-      text: info.slogan.isNotEmpty ? info.slogan : slogan,
+      text: resolvedSlogan.isNotEmpty ? resolvedSlogan : slogan,
       fontSize: 18,
       fontStyle: FontStyle.italic,
     );

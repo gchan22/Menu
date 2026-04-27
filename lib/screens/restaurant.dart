@@ -27,9 +27,9 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
     super.initState();
     // Use addPostFrameCallback to initialize controllers from the provider's state
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final info = ref.read(restaurantInfoProvider);
-      _nameController.text = info.name;
-      _sloganController.text = info.slogan;
+      final asyncInfo = ref.read(restaurantInfoProvider);
+      _nameController.text = asyncInfo.value?.name ?? '';
+      _sloganController.text = asyncInfo.value?.slogan ?? '';
     });
   }
 

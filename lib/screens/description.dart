@@ -35,7 +35,7 @@ class _DescriptionScreenState extends ConsumerState<DescriptionScreen> {
     super.initState();
     // Pre-populate with existing descriptions from global state
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final existingRows = ref.read(descriptionProvider)[widget.itemName] ?? [];
+      final existingRows = ref.read(descriptionProvider).value?[widget.itemName] ?? [];
       setState(() {
         for (var row in existingRows) {
           if (row.startsWith('IMAGE:')) {

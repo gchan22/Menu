@@ -16,7 +16,7 @@ class ClearNotesButton extends ConsumerWidget {
     return CustomButton(
       label: 'Clear Notes',
       onPressed: () {
-        final itemsMap = ref.read(categoryItemsProvider);
+        final itemsMap = ref.read(categoryItemsProvider).value ?? {};
         final currentItems = itemsMap[category] ?? [];
         final updatedItems = currentItems.map((item) {
           return item.copyWith(note: '');

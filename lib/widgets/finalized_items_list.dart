@@ -14,21 +14,29 @@ class FinalizedItemsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categoryItemsMap = ref.watch(categoryItemsProvider);
-    final descriptionRowsMap = ref.watch(descriptionProvider);
-    final items = categoryItemsMap[category] ?? [];
+    final categoryItemsAsync = ref.watch(categoryItemsProvider);
+    final descriptionRowsAsync = ref.watch(descriptionProvider);
 
-    return ListView.separated(
-      itemCount: items.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        final item = items[index];
-        return FinalizedItemRow(
-          item: item,
-          category: category,
-          descriptionRows: descriptionRowsMap[item.name] ?? [],
+    return categoryItemsAsync.when(
+      data: (categoryItemsMap) {
+        final descriptionRowsMap = descriptionRowsAsync.value ?? {};
+        final items = categoryItemsMap[category] ?? [];
+
+        return ListView.separated(
+          itemCount: items.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return FinalizedItemRow(
+              item: item,
+              category: category,
+              descriptionRows: descriptionRowsMap[item.name] ?? [],
+            );
+          },
         );
       },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => const Center(child: Text('Error loading items')),
     );
   }
 }

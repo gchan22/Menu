@@ -7,6 +7,7 @@ import 'success.dart';
 import 'finalized_restaurant.dart';
 import '../providers/service_providers.dart';
 import '../providers/restaurant_provider.dart';
+import '../widgets/custom_button.dart';
 
 /// SignInScreen provides a login interface with validation for username and password.
 class SignInScreen extends ConsumerStatefulWidget {
@@ -106,9 +107,37 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     }
   }
 
+  /// Handles Google Sign-In logic using Firebase.
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isLoading = true);
+    final auth = ref.read(authServiceProvider);
+
+    try {
+      final userCredential = await auth.signInWithGoogle();
+
+      if (userCredential != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SuccessScreen()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
+        );
+      }
+    } finally {
+      // This ensures the loading indicator is always turned off, even if the user cancels.
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final info = ref.watch(restaurantInfoProvider);
+    final asyncInfo = ref.watch(restaurantInfoProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -117,12 +146,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
+            final info = asyncInfo.value;
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => FinalizedRestaurantScreen(
-                  restaurantName: info.name,
-                  slogan: info.slogan,
+                  restaurantName: info?.name ?? '',
+                  slogan: info?.slogan ?? '',
                 ),
               ),
             );
@@ -133,40 +163,67 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       body: Stack(
         children: [
           const Backdrop(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        SignInInputFields(
+                          usernameController: _usernameController,
+                          passwordController: _passwordController,
+                          isPasswordVisible: _isPasswordVisible,
+                          onTogglePasswordVisibility: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          usernameValidator: _validateUsername,
+                          passwordValidator: _validatePassword,
+                        ),
+                        const SizedBox(height: 40),
+                        SignInActionButtons(
+                          isLoading: _isLoading,
+                          onSignIn: _handleSignIn,
+                        ),
+                        if (!_isLoading) ...[
+                          const SizedBox(height: 20),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(child: Divider(color: Colors.white54, thickness: 1)),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('OR', style: TextStyle(color: Colors.white70)),
+                              ),
+                              Expanded(child: Divider(color: Colors.white54, thickness: 1)),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          CustomButton(
+                            label: 'Sign in with Google',
+                            onPressed: _handleGoogleSignIn,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 40),
-                  SignInInputFields(
-                    usernameController: _usernameController,
-                    passwordController: _passwordController,
-                    isPasswordVisible: _isPasswordVisible,
-                    onTogglePasswordVisibility: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                    usernameValidator: _validateUsername,
-                    passwordValidator: _validatePassword,
-                  ),
-                  const SizedBox(height: 40),
-                  SignInActionButtons(
-                    isLoading: _isLoading,
-                    onSignIn: _handleSignIn,
-                  ),
-                ],
+                ),
               ),
             ),
           ),

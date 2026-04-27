@@ -8,7 +8,8 @@ class FinalizedMenuList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentMenuItems = ref.watch(menuProvider);
+    final asyncMenu = ref.watch(menuProvider);
+    final currentMenuItems = asyncMenu.value ?? [];
 
     return ListView.separated(
       padding: EdgeInsets.zero,

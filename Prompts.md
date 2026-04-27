@@ -276,3 +276,7 @@ folder to condense code.
 110. [x] In sucess file in screen folder break up code into reusable widgets
 
 111. [x] In thank_you file in screen folder break up code into reusable
+
+112. [x] In sign in screen allow google sign in authentication button
+
+//all data on firestore and allow account to have multiple menus

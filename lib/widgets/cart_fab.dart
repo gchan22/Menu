@@ -14,7 +14,7 @@ class CartFAB extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
+    final cartItems = ref.watch(cartProvider).value ?? [];
 
     return Stack(
       children: [

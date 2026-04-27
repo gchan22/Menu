@@ -36,24 +36,26 @@ class ThankYouActionButtons extends ConsumerWidget {
         const SizedBox(width: 20),
         CustomButton(
           label: 'Finished Shopping',
-          onPressed: () {
+          onPressed: () async {
             // Clear all notes from all items in all categories
-            final allCategoryItems = ref.read(categoryItemsProvider);
+            final allCategoryItems = ref.read(categoryItemsProvider).value ?? {};
             for (final categoryKey in allCategoryItems.keys) {
               final items = allCategoryItems[categoryKey] ?? [];
               final updatedItems = items.map((item) {
                 return item.copyWith(note: ''); // Clear the note
               }).toList();
-              ref.read(categoryItemsProvider.notifier).setCategoryItems(categoryKey, updatedItems);
+              await ref.read(categoryItemsProvider.notifier).setCategoryItems(categoryKey, updatedItems);
             }
 
-            final info = ref.read(restaurantInfoProvider);
+            final asyncInfo = ref.read(restaurantInfoProvider);
+            
+            if (!context.mounted) return;
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) => FinalizedRestaurantScreen(
-                  restaurantName: info.name,
-                  slogan: info.slogan,
+                  restaurantName: asyncInfo.value?.name ?? '',
+                  slogan: asyncInfo.value?.slogan ?? '',
                 ),
               ),
               (route) => false,

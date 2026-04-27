@@ -10,16 +10,22 @@ class ItemsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final itemsMap = ref.watch(categoryItemsProvider);
-    final currentItems = itemsMap[category] ?? [];
+    final itemsMapAsync = ref.watch(categoryItemsProvider);
 
-    return ListView.separated(
-      itemCount: currentItems.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        final item = currentItems[index];
-        return ItemRow(item: item, category: category);
+    return itemsMapAsync.when(
+      data: (itemsMap) {
+        final currentItems = itemsMap[category] ?? [];
+        return ListView.separated(
+          itemCount: currentItems.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            final item = currentItems[index];
+            return ItemRow(item: item, category: category);
+          },
+        );
       },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => const Center(child: Text('Error loading items')),
     );
   }
 }

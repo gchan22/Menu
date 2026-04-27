@@ -15,7 +15,7 @@ class FinalizedMenuScreen extends ConsumerWidget {
   /// The screen layout
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final info = ref.watch(restaurantInfoProvider);
+    final asyncInfo = ref.watch(restaurantInfoProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,8 +30,8 @@ class FinalizedMenuScreen extends ConsumerWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => FinalizedRestaurantScreen(
-                  restaurantName: info.name,
-                  slogan: info.slogan,
+                  restaurantName: asyncInfo.value?.name ?? '',
+                  slogan: asyncInfo.value?.slogan ?? '',
                 ),
               ),
             );

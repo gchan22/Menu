@@ -1,41 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// DatabaseService handles operations related to Firestore database.
+/// DatabaseService provides methods to interact with the Firestore database.
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Saves user information (username) to Firestore.
-  Future<void> saveUser(String uid, String username) async {
-    try {
-      await _db.collection('users').doc(uid).set({
-        'username': username,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      throw Exception('Failed to save user data to database: $e');
-    }
+  /// Returns a reference to the current user's document.
+  DocumentReference<Map<String, dynamic>> _getUserDocRef(String uid) {
+    return _db.collection('users').doc(uid);
   }
 
-  /// Fetches data from the 'app_data' Firestore collection.
-  Future<List<String>> fetchData() async {
-    try {
-      final snapshot = await _db.collection('app_data').orderBy('createdAt').get();
-      return snapshot.docs.map((doc) => doc.data()['value'] as String).toList();
-    } catch (e) {
-      print('Error fetching data: $e');
-      return [];
-    }
+  /// Fetches all data for a given user.
+  Future<Map<String, dynamic>?> fetchUserData(String uid) async {
+    final doc = await _getUserDocRef(uid).get();
+    return doc.data();
   }
 
-  /// Saves a string to the 'app_data' Firestore collection.
-  Future<void> saveData(String data) async {
-    try {
-      await _db.collection('app_data').add({
-        'value': data,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      print('Error saving data: $e');
-    }
+  /// Saves a specific field (e.g., 'restaurantInfo') for a user.
+  /// This uses `SetOptions(merge: true)` to avoid overwriting other fields.
+  Future<void> saveField(String uid, String field, dynamic value) async {
+    await _getUserDocRef(uid).set({field: value}, SetOptions(merge: true));
+  }
+
+  /// Clears all data for a user by setting their document to an empty map.
+  Future<void> clearUserData(String uid) async {
+    await _getUserDocRef(uid).set({});
   }
 }

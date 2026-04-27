@@ -38,7 +38,7 @@ class ItemRow extends ConsumerWidget {
             ),
             TextButton(
               onPressed: () {
-                final itemsMap = ref.read(categoryItemsProvider);
+                final itemsMap = ref.read(categoryItemsProvider).value ?? {};
                 final currentItems = itemsMap[category] ?? [];
                 final updatedItems = currentItems.map((i) {
                   if (i.name == item.name && i.price == item.price) {
@@ -135,7 +135,7 @@ class ItemRow extends ConsumerWidget {
                   CustomButton(
                     label: '-',
                     onPressed: () {
-                      final itemsMap = ref.read(categoryItemsProvider);
+                      final itemsMap = ref.read(categoryItemsProvider).value ?? {};
                       final currentItems = itemsMap[category] ?? [];
                       final updatedItems = currentItems.map((i) {
                         if (i.name == item.name && i.price == item.price) {

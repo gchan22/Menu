@@ -20,14 +20,16 @@ class ChoiceActionButtons extends ConsumerWidget {
       children: [
         CustomButton(
           label: 'Yes',
-          onPressed: () {
+          onPressed: () async {
             // Reset all saved data as per prompt 74
-            ref.read(restaurantInfoProvider.notifier).reset();
-            ref.read(menuProvider.notifier).reset();
-            ref.read(categoryItemsProvider.notifier).reset();
-            ref.read(descriptionProvider.notifier).reset();
-            ref.read(cartProvider.notifier).clear();
+            // This now also clears the data in Firestore
+            await ref.read(restaurantInfoProvider.notifier).reset();
+            await ref.read(menuProvider.notifier).reset();
+            await ref.read(categoryItemsProvider.notifier).reset();
+            await ref.read(descriptionProvider.notifier).reset();
+            await ref.read(cartProvider.notifier).clear();
 
+            if (!context.mounted) return;
             // Go to Restaurant Screen
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(

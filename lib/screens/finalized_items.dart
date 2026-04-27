@@ -19,7 +19,8 @@ class FinalizedItemsScreen extends ConsumerWidget {
   /// The screen layout
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final menuItems = ref.watch(menuProvider);
+    final asyncMenu = ref.watch(menuProvider);
+    final menuItems = asyncMenu.value ?? [];
 
     return Scaffold(
       appBar: AppBar(

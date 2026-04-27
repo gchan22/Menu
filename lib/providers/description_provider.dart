@@ -1,78 +1,75 @@
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'shared_preferences_provider.dart';
 import 'service_providers.dart';
 
 /// Notifier class for managing the descriptions of food items.
-class DescriptionNotifier extends Notifier<Map<String, List<String>>> {
-  static const _baseKey = 'descriptions';
-
-  String _getUserKey() {
-    final user = ref.read(authStateProvider).value;
-    final uid = user?.uid ?? 'guest';
-    return '${uid}_$_baseKey';
-  }
-
-  /// load saved preferences
+class DescriptionNotifier extends AsyncNotifier<Map<String, List<String>>> {
+  /// load saved descriptions from Firestore
   @override
-  Map<String, List<String>> build() {
+  Future<Map<String, List<String>>> build() async {
     // Watch for authentication state changes
-    ref.watch(authStateProvider);
-
-    final prefs = ref.watch(sharedPreferencesProvider);
-    final data = prefs.getString(_getUserKey());
-    if (data != null) {
-      try {
-        final Map<String, dynamic> jsonMap = jsonDecode(data);
-        return jsonMap.map((key, value) {
-          final List<dynamic> list = value;
-          return MapEntry(key, list.map((e) => e.toString()).toList());
-        });
-      } catch (e) {
-        // Fallback
-      }
+    final user = ref.watch(authStateProvider).value;
+    if (user == null) {
+      return {};
     }
+
+    final db = ref.read(databaseServiceProvider);
+    final userData = await db.fetchUserData(user.uid);
+
+    if (userData != null && userData.containsKey('descriptions')) {
+      final Map<String, dynamic> jsonMap = userData['descriptions'];
+      return jsonMap.map((key, value) {
+        final List<dynamic> list = value;
+        return MapEntry(key, list.map((e) => e.toString()).toList());
+      });
+    }
+
     // Initial state: empty mapping of item names to description lists
     return {};
   }
 
-  /// Save current state to preferences
-  void _save() {
-    final prefs = ref.read(sharedPreferencesProvider);
-    prefs.setString(_getUserKey(), jsonEncode(state));
+  /// Save current state to Firestore
+  Future<void> _save() async {
+    final user = ref.read(authStateProvider).value;
+    if (user == null) return;
+
+    final db = ref.read(databaseServiceProvider);
+    await db.saveField(user.uid, 'descriptions', state.value ?? {});
   }
 
   /// Sets or updates the description rows for a specific item.
-  void setDescriptionRows(String itemName, List<String> rows) {
-    state = {...state, itemName: rows};
-    _save();
+  Future<void> setDescriptionRows(String itemName, List<String> rows) async {
+    final current = state.value ?? {};
+    state = AsyncData({...current, itemName: rows});
+    await _save();
   }
 
   /// Adds a single description row for an item.
-  void addDescriptionRow(String itemName, String row) {
-    final currentRows = state[itemName] ?? [];
-    state = {...state, itemName: [...currentRows, row]};
-    _save();
+  Future<void> addDescriptionRow(String itemName, String row) async {
+    final current = state.value ?? {};
+    final currentRows = current[itemName] ?? [];
+    state = AsyncData({...current, itemName: [...currentRows, row]});
+    await _save();
   }
 
   /// Removes a specific description row for an item.
-  void removeDescriptionRow(String itemName, String row) {
-    final currentRows = state[itemName] ?? [];
-    state = {
-      ...state,
+  Future<void> removeDescriptionRow(String itemName, String row) async {
+    final current = state.value ?? {};
+    final currentRows = current[itemName] ?? [];
+    state = AsyncData({
+      ...current,
       itemName: currentRows.where((r) => r != row).toList(),
-    };
-    _save();
+    });
+    await _save();
   }
 
   /// Resets the descriptions mapping to its initial empty state.
-  void reset() {
-    state = {};
-    _save();
+  Future<void> reset() async {
+    state = const AsyncData({});
+    await _save();
   }
 }
 
 /// Provider to manage and access the list of description lines for each food item.
-final descriptionProvider = NotifierProvider<DescriptionNotifier, Map<String, List<String>>>(() {
+final descriptionProvider = AsyncNotifierProvider<DescriptionNotifier, Map<String, List<String>>>(() {
   return DescriptionNotifier();
 });

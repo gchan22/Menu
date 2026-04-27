@@ -15,17 +15,20 @@ class CartButtons extends ConsumerWidget {
       children: [
         CustomButton(
           label: 'Clear Cart',
-          onPressed: () {
-            ref.read(cartProvider.notifier).clear();
+          onPressed: () async {
+            await ref.read(cartProvider.notifier).clear();
           },
         ),
         const SizedBox(width: 20),
         CustomButton(
           label: 'Pay',
-          onPressed: () {
-            final menuItems = ref.read(menuProvider);
+          onPressed: () async {
+            final asyncMenu = ref.read(menuProvider);
+            final menuItems = asyncMenu.value ?? [];
             final category = menuItems.isNotEmpty ? menuItems[0].label : 'Menu';
-            ref.read(cartProvider.notifier).clear();
+            await ref.read(cartProvider.notifier).clear();
+            
+            if (!context.mounted) return;
             Navigator.push(
               context,
               MaterialPageRoute(

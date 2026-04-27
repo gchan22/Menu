@@ -8,7 +8,8 @@ class MenuList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final menuItems = ref.watch(menuProvider);
+    final asyncMenu = ref.watch(menuProvider);
+    final menuItems = asyncMenu.value ?? [];
 
     return ListView.separated(
       itemCount: menuItems.length,

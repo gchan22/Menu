@@ -14,7 +14,7 @@ class CartScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
+    final cartItems = ref.watch(cartProvider).value ?? [];
     final totalCost = ref.watch(cartTotalProvider);
 
     final tax = totalCost * 0.08875;
