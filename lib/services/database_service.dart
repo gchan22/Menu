@@ -4,25 +4,45 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Returns a reference to the current user's document.
-  DocumentReference<Map<String, dynamic>> _getUserDocRef(String uid) {
-    return _db.collection('users').doc(uid);
+  /// The currently active menu ID. If null, a new menu will be created on the next save.
+  String? currentMenuId;
+
+  /// Returns a reference to a specific menu document.
+  DocumentReference<Map<String, dynamic>> _getMenuDocRef(String uid, String menuId) {
+    return _db.collection('users').doc(uid).collection('menus').doc(menuId);
   }
 
-  /// Fetches all data for a given user.
-  Future<Map<String, dynamic>?> fetchUserData(String uid) async {
-    final doc = await _getUserDocRef(uid).get();
+  /// Fetches all menus for a given user.
+  Future<List<Map<String, dynamic>>> fetchUserMenus(String uid) async {
+    final snapshot = await _db.collection('users').doc(uid).collection('menus').get();
+    return snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
+  }
+
+  /// Fetches all data for a specific menu.
+  Future<Map<String, dynamic>?> fetchMenuData(String uid, String menuId) async {
+    final doc = await _getMenuDocRef(uid, menuId).get();
     return doc.data();
   }
 
-  /// Saves a specific field (e.g., 'restaurantInfo') for a user.
-  /// This uses `SetOptions(merge: true)` to avoid overwriting other fields.
-  Future<void> saveField(String uid, String field, dynamic value) async {
-    await _getUserDocRef(uid).set({field: value}, SetOptions(merge: true));
+  /// Fetches all data for the current menu.
+  Future<Map<String, dynamic>?> fetchUserData(String uid) async {
+    if (currentMenuId != null) {
+      return await fetchMenuData(uid, currentMenuId!);
+    }
+    return null;
   }
 
-  /// Clears all data for a user by setting their document to an empty map.
+  /// Saves a specific field for a user's current menu.
+  Future<void> saveField(String uid, String field, dynamic value) async {
+    currentMenuId ??= _db.collection('users').doc(uid).collection('menus').doc().id;
+    await _getMenuDocRef(uid, currentMenuId!).set({field: value}, SetOptions(merge: true));
+    await _db.collection('users').doc(uid).set({'lastModified': FieldValue.serverTimestamp()}, SetOptions(merge: true));
+  }
+
+  /// Clears all data for the current menu by setting its document to an empty map.
   Future<void> clearUserData(String uid) async {
-    await _getUserDocRef(uid).set({});
+    if (currentMenuId != null) {
+      await _getMenuDocRef(uid, currentMenuId!).set({});
+    }
   }
 }

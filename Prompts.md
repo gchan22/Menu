@@ -279,4 +279,11 @@ folder to condense code.
 
 112. [x] In sign in screen allow google sign in authentication button
 
-//all data on firestore and allow account to have multiple menus
+113. [x] Store all data to firestore rather tha have it on local storage
+
+114. [x] create a new screen called multi_menu and have a new button in success screen 
+with text Create Another Menu. This button creates a new instance of a menu without erasing the old one.
+Have the continue edit button now go to multi_menu screen. Have multi_menu screen show current menus that 
+are havent been erased. Have all menus that havent been erased stored to firebase. 
+In multi_menu allow users to click shown existing menu to choose which menu they want to edit
+and go to that menus resaurant screen.
