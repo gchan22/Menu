@@ -8,7 +8,6 @@ import '../providers/description_provider.dart';
 import '../providers/cart_provider.dart';
 import '../screens/multi_menu.dart';
 import '../screens/restaurant.dart';
-import '../screens/choice_menu.dart';
 import 'custom_button.dart';
 
 class MultiMenuSuccessButtons extends ConsumerWidget {
@@ -52,11 +51,11 @@ class MultiMenuSuccessButtons extends ConsumerWidget {
         ),
         const SizedBox(height: 10),
         CustomButton(
-          label: 'New Menu (Reset Current)',
+          label: 'Delete Menu',
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const ChoiceMenuScreen(),
+                builder: (context) => const MultiMenuScreen(isDeleting: true),
               ),
             );
           },

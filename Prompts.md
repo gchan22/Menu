@@ -287,3 +287,10 @@ Have the continue edit button now go to multi_menu screen. Have multi_menu scree
 are havent been erased. Have all menus that havent been erased stored to firebase. 
 In multi_menu allow users to click shown existing menu to choose which menu they want to edit
 and go to that menus resaurant screen.
+
+115. [x] Change new menu (reset current) button to Delete Menu. Have this button
+ show you existing menus and allow the user to delete current existing menus 
+
+ 116. [x] Have the delete menu button not go to choice menu anymore instead display current menus like edit menu button but instead lets you delete menus of your choice with - button. This button then goes to choice menu screen.
+ If click yes on choice menu then delete that menu if click no then go back to multi_menu screen
+and show current menus to delete.

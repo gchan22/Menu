@@ -45,4 +45,12 @@ class DatabaseService {
       await _getMenuDocRef(uid, currentMenuId!).set({});
     }
   }
+
+  /// Deletes a specific menu entirely.
+  Future<void> deleteMenu(String uid, String menuId) async {
+    await _getMenuDocRef(uid, menuId).delete();
+    if (currentMenuId == menuId) {
+      currentMenuId = null;
+    }
+  }
 }

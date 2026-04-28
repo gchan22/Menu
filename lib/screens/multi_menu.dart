@@ -7,9 +7,12 @@ import '../providers/category_items_provider.dart';
 import '../providers/description_provider.dart';
 import '../providers/cart_provider.dart';
 import 'restaurant.dart';
+import 'choice_menu.dart';
 
 class MultiMenuScreen extends ConsumerWidget {
-  const MultiMenuScreen({super.key});
+  final bool isDeleting;
+
+  const MultiMenuScreen({super.key, this.isDeleting = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +20,7 @@ class MultiMenuScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Menus'),
+        title: Text(isDeleting ? 'Delete a Menu' : 'Your Menus'),
       ),
       body: user == null
           ? const Center(child: Text('Please sign in to view your menus.'))
@@ -50,8 +53,21 @@ class MultiMenuScreen extends ConsumerWidget {
                     return ListTile(
                       title: Text(name),
                       subtitle: Text(slogan),
-                      trailing: const Icon(Icons.arrow_forward),
-                      onTap: () async {
+                      trailing: isDeleting 
+                          ? IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => ChoiceMenuScreen(menuIdToDelete: menu['id']),
+                                  ),
+                                );
+                              },
+                            )
+                          : const Icon(Icons.arrow_forward),
+                      onTap: isDeleting 
+                          ? null 
+                          : () async {
                         ref.read(databaseServiceProvider).currentMenuId = menu['id'];
                         
                         ref.invalidate(restaurantInfoProvider);

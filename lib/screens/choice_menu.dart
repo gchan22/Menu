@@ -4,7 +4,8 @@ import '../widgets/info_box.dart';
 import '../widgets/choice_action_buttons.dart';
 
 class ChoiceMenuScreen extends StatelessWidget {
-  const ChoiceMenuScreen({super.key});
+  final String? menuIdToDelete;
+  const ChoiceMenuScreen({super.key, this.menuIdToDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +20,13 @@ class ChoiceMenuScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InfoBox(
-                    text: 'Are you sure you want to create a new menu',
+                    text: menuIdToDelete != null 
+                        ? 'Are you sure you want to delete this menu?' 
+                        : 'Are you sure you want to create a new menu',
                     fontSize: 18,
                   ),
                   const SizedBox(height: 40),
-                  const ChoiceActionButtons(),
+                  ChoiceActionButtons(menuIdToDelete: menuIdToDelete),
                 ],
               ),
             ),
