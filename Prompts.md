@@ -294,3 +294,5 @@ and go to that menus resaurant screen.
  116. [x] Have the delete menu button not go to choice menu anymore instead display current menus like edit menu button but instead lets you delete menus of your choice with - button. This button then goes to choice menu screen.
  If click yes on choice menu then delete that menu if click no then go back to multi_menu screen
 and show current menus to delete.
+
+117. [x] In multi menu screen break up code into smaller reusable widgets in widget folder
