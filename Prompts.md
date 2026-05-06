@@ -186,7 +186,7 @@ item screen say instead + Add New Item
 copy and paste have it as a button above add description and call it + Add Picture
 that lets you add a picture
 
-80. [x] Add a new row under the total cost buttom and have it say Tax on the left 
+80. [x] Add a new row under the total cost button and have it say Tax on the left 
 side and on the right side multiply the number in total cost by 0.08875 and display 
 the number calculated
 
@@ -196,7 +196,7 @@ to finalized_items screen after the pay button is pressed and cart is cleared.
 
 82. [x] Create a thank_you file in screen and have the screen display the text
 Thank You. Under that text have a button that says Continue Shopping that goes to 
-the finalized_items screen and have another button next to it called Finised Shopping
+the finalized_items screen and have another button next to it called Finished Shopping
 that goes to finalized_resturant screen. Have the pay button in cart go to 
 thank_you screen.
 
