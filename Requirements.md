@@ -51,4 +51,8 @@ for paying and then allows you to continue shopping or finish shopping.
 *   The application will allow you to sign in as a current user or create a new account.
 If signing in as a new user allows you create a new account that allows you to create a new menu.
 If you are a current user allows you to continue editing the menu that you left off at or 
-create a new menu.
+create a new menu. Google sign in will also be allowed.
+
+## 7. Multiple Menu Per account
+*   The application allows user to create multiple menus on the same account as well as edit
+the existing ones. Older menus can also be deleted per users choice.
